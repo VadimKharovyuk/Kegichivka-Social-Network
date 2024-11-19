@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Панель администратора</title>
 </head>
 <body>
-$END$
+<h1>Панель администратора</h1>
+
+<div th:if="${user != null}">
+    <p>Добро пожаловать, <span th:text="${user.firstName + ' ' + user.lastName}">!</span></p>
+
+    <h2>Статистика:</h2>
+    <ul>
+        <li>Всего пользователей: <span th:text="${totalUsers}"></span></li>
+        <li>Активные пользователи: <span th:text="${activeUsers}"></span></li>
+        <li>Ожидают подтверждения: <span th:text="${pendingUsers}"></span></li>
+    </ul>
+
+    <h2>Действия:</h2>
+    <ul>
+        <li><a th:href="@{/admin/users}">Управление пользователями</a></li>
+        <li><a th:href="@{/admin/business}">Управление бизнес-аккаунтами</a></li>
+        <li><a th:href="@{/admin/verification}">Верификация документов</a></li>
+    </ul>
+</div>
+
+<form th:action="@{/auth/logout}" method="post">
+    <button type="submit">Выйти</button>
+</form>
 </body>
 </html>

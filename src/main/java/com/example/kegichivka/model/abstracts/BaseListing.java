@@ -1,5 +1,6 @@
-package com.example.kegichivka.model;
+package com.example.kegichivka.model.abstracts;
 
+import com.example.kegichivka.model.BusinessUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

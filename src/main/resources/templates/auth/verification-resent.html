@@ -1,10 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Письмо отправлено повторно</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-$END$
+<div>
+    <h1>Письмо с подтверждением отправлено повторно</h1>
+
+    <div th:if="${message}" class="success-message">
+        <p th:text="${message}"></p>
+    </div>
+
+    <div class="info-text">
+        <p>Пожалуйста, проверьте вашу электронную почту.</p>
+        <p>Если вы не получили письмо в течение нескольких минут:</p>
+        <ul>
+            <li>Проверьте папку "Спам"</li>
+            <li>Убедитесь, что указали правильный email</li>
+            <li>Подождите несколько минут и попробуйте снова</li>
+        </ul>
+    </div>
+
+    <div class="navigation-links">
+        <p>
+            <a th:href="@{/auth/register}">Вернуться на страницу регистрации</a>
+        </p>
+        <p>
+            <a th:href="@{/auth/login}">Перейти к входу</a>
+        </p>
+    </div>
+
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+        <p>
+            <a th:href="@{/auth/resend-verification(email=${email})}">Попробовать снова</a>
+        </p>
+    </div>
+</div>
 </body>
 </html>

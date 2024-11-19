@@ -6,8 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class KegichivkaApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(KegichivkaApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(KegichivkaApplication.class, args);
+    }
+
+    //добавить тип акаунта при регистарции
 
 }

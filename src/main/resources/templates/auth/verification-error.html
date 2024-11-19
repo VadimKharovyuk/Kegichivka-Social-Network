@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Ошибка отправки письма</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-$END$
+<div>
+    <h1>Ошибка отправки письма</h1>
+
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div class="info-text">
+        <p>Возможные причины ошибки:</p>
+        <ul>
+            <li>Неверный email адрес</li>
+            <li>Проблемы с сервером</li>
+            <li>Аккаунт уже подтвержден</li>
+        </ul>
+    </div>
+
+    <div class="navigation-links">
+        <p>Вы можете:</p>
+        <ul>
+            <li>
+                <a th:href="@{/auth/register}">Вернуться на страницу регистрации</a>
+            </li>
+            <li>
+                <a th:href="@{/auth/resend-verification(email=${email})}">Попробовать отправить письмо снова</a>
+            </li>
+            <li>
+                <a th:href="@{/auth/login}">Перейти к входу</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="contact-support">
+        <p>Если проблема повторяется, пожалуйста, обратитесь в службу поддержки.</p>
+    </div>
+</div>
 </body>
 </html>

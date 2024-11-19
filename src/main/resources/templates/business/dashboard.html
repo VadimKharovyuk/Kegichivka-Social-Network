@@ -1,10 +1,16 @@
+<!-- business/dashboard.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Панель управления бизнеса</title>
 </head>
 <body>
-$END$
+<h1>Панель управления бизнеса</h1>
+<div th:if="${user != null}">
+  <p>Добро пожаловать, <span th:text="${user.companyName}">!</span></p>
+</div>
+<form th:action="@{/auth/logout}" method="post">
+  <button type="submit">Выйти</button>
+</form>
 </body>
 </html>

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Активация успешна</title>
 </head>
 <body>
-
+<h1>Активация аккаунта</h1>
+<p th:text="${message}"></p>
+<a href="/auth/login">Войти в систему</a>
 </body>
 </html>

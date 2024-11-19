@@ -1,4 +1,4 @@
-package com.example.kegichivka.model;
+package com.example.kegichivka.model.abstracts;
 
 import com.example.kegichivka.enums.AccountStatus;
 import com.example.kegichivka.enums.UserRole;
@@ -8,8 +8,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
 @MappedSuperclass
 @Getter
 @Setter
@@ -31,10 +33,12 @@ public abstract class BaseUser {
     @Column(nullable = false)
     private String lastName;
 
-    @Column
+    @Column(nullable = false)
     private String phoneNumber;
 
-    // Заменяем сложную связь на простую строку
+
+    @Column(nullable = false)  // делаем обязательным
+    private LocalDate dateOfBirth;
     @Column
     private String profilePhotoUrl;
 
@@ -76,6 +80,5 @@ public abstract class BaseUser {
         verificationTokenExpiry = LocalDateTime.now().plusHours(24);
     }
 
-    // Абстрактный метод для проверки заполненности профиля
-    public abstract boolean isProfileComplete();
+
 }

@@ -1,10 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+  <title>Вход в систему</title>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-$END$
+<div>
+  <h1>Вход в систему</h1>
+
+  <div th:if="${error}" class="error-message">
+    <p th:text="${error}"></p>
+  </div>
+
+  <form th:action="@{/auth/login}" th:object="${loginRequest}" method="post">
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" th:field="*{email}" required/>
+      <span th:if="${emailError}" th:text="${emailError}" class="error"></span>
+      <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></span>
+    </div>
+
+    <div>
+      <label for="password">Пароль:</label>
+      <input type="password" id="password" th:field="*{password}" required/>
+      <span th:if="${passwordError}" th:text="${passwordError}" class="error"></span>
+      <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></span>
+    </div>
+
+    <div>
+      <button type="submit">Войти</button>
+    </div>
+  </form>
+
+  <div class="additional-links">
+    <p>
+      <a th:href="@{/auth/register}">Регистрация</a>
+    </p>
+    <p>
+      <a th:href="@{/auth/forgot-password}">Забыли пароль?</a>
+    </p>
+  </div>
+</div>
 </body>
 </html>

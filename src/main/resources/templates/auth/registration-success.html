@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>Регистрация успешна</title>
 </head>
 <body>
-$END$
+<h1>Регистрация прошла успешно!</h1>
+<p>На ваш email <span th:text="${email}"></span> отправлено письмо для активации аккаунта.</p>
+<p>Пожалуйста, проверьте вашу почту и перейдите по ссылке для активации.</p>
 </body>
 </html>
