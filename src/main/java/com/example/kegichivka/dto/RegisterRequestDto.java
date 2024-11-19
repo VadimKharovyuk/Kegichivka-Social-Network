@@ -1,5 +1,7 @@
 package com.example.kegichivka.dto;
 
+import com.example.kegichivka.enums.BusinessType;
+import com.example.kegichivka.enums.UserRole;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +33,13 @@ public class RegisterRequestDto {
     @Past(message = "Дата рождения должна быть в прошлом")
     private LocalDate dateOfBirth;
 
-//    @Pattern(regexp = "^\\+?[1-9][0-9]{7,14}$", message = "Некорректный формат телефона")
+    //    @Pattern(regexp = "^\\+?[1-9][0-9]{7,14}$", message = "Некорректный формат телефона")
     private String phoneNumber;
+
+    @NotNull(message = "Выберите тип аккаунта")
+    private UserRole role;
+    @NotNull(message = "Напишите название компании")
+    private String companyName;
+    private String companyDescription;
+    private BusinessType businessType;
 }

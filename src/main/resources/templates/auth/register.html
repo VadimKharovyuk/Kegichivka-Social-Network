@@ -44,7 +44,56 @@
         <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
     </div>
 
+    <div>
+        <label for="role">Тип аккаунта:</label>
+        <select id="role" th:field="*{role}" onchange="toggleBusinessFields()">
+            <option value="REGULAR_USER">Обычный пользователь</option>
+            <option value="BUSINESS_USER">Бизнес аккаунт</option>
+        </select>
+        <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
+    </div>
+
+    <!-- Поля для бизнес-аккаунта -->
+    <div id="businessFields" style="display: none;">
+        <div>
+            <label for="companyName">Название компании:</label>
+            <input type="text" id="companyName" th:field="*{companyName}"/>
+            <span th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></span>
+        </div>
+
+        <div>
+            <label for="companyDescription">Описание компании:</label>
+            <textarea id="companyDescription" th:field="*{companyDescription}"></textarea>
+            <span th:if="${#fields.hasErrors('companyDescription')}" th:errors="*{companyDescription}"></span>
+        </div>
+
+        <div>
+            <label for="businessType">Тип бизнеса:</label>
+            <select id="businessType" th:field="*{businessType}">
+                <option value="EMPLOYER">Работодатель</option>
+                <option value="REAL_ESTATE_RENT">Аренда недвижимости</option>
+                <option value="REAL_ESTATE_SALE">Продажа недвижимости</option>
+                <option value="REAL_ESTATE_BOTH">Аренда и продажа недвижимости</option>
+                <option value="BUSINESS_ALL">Все услуги</option>
+            </select>
+            <span th:if="${#fields.hasErrors('businessType')}" th:errors="*{businessType}"></span>
+        </div>
+    </div>
+
     <button type="submit">Зарегистрироваться</button>
 </form>
+
+<script>
+    function toggleBusinessFields() {
+        var role = document.getElementById('role').value;
+        var businessFields = document.getElementById('businessFields');
+        businessFields.style.display = role === 'BUSINESS_USER' ? 'block' : 'none';
+    }
+
+    // Вызываем при загрузке страницы для корректного отображения
+    window.onload = function() {
+        toggleBusinessFields();
+    }
+</script>
 </body>
 </html>

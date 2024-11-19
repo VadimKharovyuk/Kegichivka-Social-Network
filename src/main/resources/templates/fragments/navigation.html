@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Navigation Fragment</title>
+</head>
+<body>
+<!-- Определяем фрагмент через th:fragment -->
+<nav th:fragment="navigation">
+  <div class="nav-content">
+    <ul class="nav-list">
+      <li><a th:href="@{/}"><i class="fas fa-home"></i> Главная</a></li>
+      <li><a th:href="@{/vacancies}"><i class="fas fa-search"></i> Поиск вакансий</a></li>
+      <li><a th:href="@{/companies}"><i class="fas fa-users"></i> Компании</a></li>
+      <li><a th:href="@{/blog}"><i class="fas fa-newspaper"></i> Блог</a></li>
+    </ul>
+    <button class="login-button">
+      <a href="/auth/login"></a>
+      <i class="fas fa-user"></i>
+      Войти
+    </button>
+  </div>
+</nav>
+</body>
+</html>

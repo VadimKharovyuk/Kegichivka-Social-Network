@@ -10,6 +10,7 @@ public class KegichivkaApplication {
         SpringApplication.run(KegichivkaApplication.class, args);
     }
 
-    //добавить тип акаунта при регистарции
+    //добавить регион для работы
+    //добавить категории для работы
 
 }

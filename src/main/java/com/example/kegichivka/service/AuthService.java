@@ -5,6 +5,7 @@ import com.example.kegichivka.dto.JwtResponseDto;
 import com.example.kegichivka.dto.LoginRequestDto;
 import com.example.kegichivka.dto.RegisterRequestDto;
 import com.example.kegichivka.enums.AccountStatus;
+import com.example.kegichivka.enums.UserRole;
 import com.example.kegichivka.enums.VerificationStatus;
 import com.example.kegichivka.exception.EmailAlreadyExistsException;
 import com.example.kegichivka.exception.TokenExpiredException;
@@ -40,25 +41,27 @@ public class AuthService {
 
     @Transactional
     public JwtResponseDto register(RegisterRequestDto request) {
-        // Проверяем существование email в обоих репозиториях
+        // Проверяем существование email
         if (regularUserRepository.existsByEmail(request.getEmail()) ||
                 businessUserRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException("Email уже зарегистрирован");
         }
 
-        // Создаем нового пользователя
-        RegularUser user = userMapper.toEntity(request);
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        // Сохраняем пользователя
-        user = regularUserRepository.save(user);
-
-        // Генерируем токены
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
+        BaseUser user;
+        if (request.getRole() == UserRole.BUSINESS_USER) {
+            BusinessUser businessUser = userMapper.toBusinessUser(request);
+            businessUser.setPassword(passwordEncoder.encode(request.getPassword()));
+            user = businessUserRepository.save(businessUser);
+        } else {
+            RegularUser regularUser = userMapper.toRegularUser(request);
+            regularUser.setPassword(passwordEncoder.encode(request.getPassword()));
+            user = regularUserRepository.save(regularUser);
+        }
 
         emailService.sendVerificationEmail(user.getEmail(), user.getVerificationToken());
-        log.info("Registration successful and verification email sent for user: {}", user.getEmail());
+
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
 
         return JwtResponseDto.builder()
                 .accessToken(accessToken)

@@ -1,10 +1,327 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Подключение CSS -->
+    <title>Поиск работы</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            /* Основные цвета */
+            --primary-green: #2ecc71;
+            --light-green: #a8e6cf;
+            --dark-blue: #2c3e50;
+            --blue: #3498db;
+            --light-blue: #ebf5fb;
+
+            /* Дополнительные цвета */
+            --accent-green: #27ae60;
+            --accent-blue: #2980b9;
+            --gray-light: #f5f6fa;
+            --gray: #95a5a6;
+
+            /* Градиенты */
+            --gradient-main: linear-gradient(135deg, var(--primary-green), var(--blue));
+            --gradient-secondary: linear-gradient(135deg, var(--light-green), var(--light-blue));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--gray-light);
+        }
+
+        /* Шапка сайта */
+        .top-header {
+            background: var(--gradient-main);
+            height: 300px;
+            color: white;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            height: 100%;
+        }
+
+        .post-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s;
+        }
+
+        .post-section:hover {
+            transform: translateY(-5px);
+        }
+
+        .post-section h2 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-button {
+            background: white;
+            color: var(--dark-blue);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .action-button:hover {
+            background: var(--light-green);
+            transform: translateY(-2px);
+        }
+
+
+        /* Основной контейнер */
+        main {
+            flex: 1;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 150px;
+            max-width: 1500px;
+        }
+
+        /* Стили для сетки категорий */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+        }
+
+        .category-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--dark-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .category-salary {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-count {
+            color: #808080;
+            font-size: 0.9rem;
+        }
+
+        .more-jobs {
+            color: #3498db;
+            text-decoration: none;
+            margin-top: 1rem;
+            display: inline-block;
+            font-size: 0.95rem;
+        }
+
+        .more-jobs:hover {
+            text-decoration: underline;
+        }
+
+
+
+        /* Футер */
+        footer {
+            background: var(--dark-blue);
+            color: white;
+            padding: 3rem 1rem;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+    </style>
 </head>
 <body>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+<header class="top-header">
+    <div class="header-content">
+        <div class="post-section">
+            <h2><i class="fas fa-file-alt"></i> Разместить резюме</h2>
+            <p>Создайте профессиональное резюме и получите работу мечты</p>
+            <button class="action-button">
+                <i class="fas fa-plus"></i>
+                Создать резюме
+            </button>
+        </div>
+        <div class="post-section">
+            <h2><i class="fas fa-briefcase"></i> Разместить вакансию</h2>
+            <p>Найдите идеального сотрудника для вашей компании</p>
+            <button class="action-button">
+                <i class="fas fa-plus"></i>
+                Опубликовать вакансию
+            </button>
+        </div>
+    </div>
+</header>
 
+
+
+<main>
+    <div class="categories-grid">
+        <!-- Вакансии дня -->
+        <div class="category-card">
+            <div class="category-title">Вакансии дня</div>
+            <div class="category-salary">до 55 000 ₽</div>
+            <div class="category-count">14 вакансий</div>
+        </div>
+
+        <!-- Компании дня -->
+        <div class="category-card">
+            <div class="category-title">Компании дня</div>
+            <div class="category-count">320 вакансий</div>
+        </div>
+
+        <!-- Работа из дома -->
+        <div class="category-card">
+            <div class="category-title">Работа из дома</div>
+            <div class="category-count">706 вакансий</div>
+        </div>
+
+        <!-- Подработка -->
+        <div class="category-card">
+            <div class="category-title">Подработка</div>
+            <div class="category-salary">45 000 – 410 000 ₽</div>
+            <div class="category-count">24 вакансии</div>
+        </div>
+
+        <!-- Курьер -->
+        <div class="category-card">
+            <div class="category-title">Курьер</div>
+            <div class="category-salary">155 000 – 240 000 ₽</div>
+            <div class="category-count">1 вакансия</div>
+        </div>
+
+        <!-- Водитель -->
+        <div class="category-card">
+            <div class="category-title">Водитель</div>
+            <div class="category-salary">120 000 – 280 000 ₽</div>
+            <div class="category-count">7 вакансий</div>
+        </div>
+
+        <!-- Продавец -->
+        <div class="category-card">
+            <div class="category-title">Продавец</div>
+            <div class="category-salary">135 000 – 180 000 ₽</div>
+            <div class="category-count">1 вакансия</div>
+        </div>
+
+        <!-- Администратор -->
+        <div class="category-card">
+            <div class="category-title">Администратор</div>
+            <div class="category-salary">80 000 – 350 000 ₽</div>
+            <div class="category-count">24 вакансии</div>
+        </div>
+
+        <!-- Оператор -->
+        <div class="category-card">
+            <div class="category-title">Оператор</div>
+            <div class="category-count">3 вакансии</div>
+        </div>
+
+        <!-- Программист -->
+        <div class="category-card">
+            <div class="category-title">Программист</div>
+            <div class="category-salary">80 000 – 765 000 ₽</div>
+            <div class="category-count">47 вакансий</div>
+        </div>
+
+        <!-- Менеджер -->
+        <div class="category-card">
+            <div class="category-title">Менеджер</div>
+            <div class="category-salary">до 1 665 000 ₽</div>
+            <div class="category-count">160 вакансий</div>
+        </div>
+
+        <!-- Помощник -->
+        <div class="category-card">
+            <div class="category-title">Помощник</div>
+            <div class="category-salary">40 000 – 340 000 ₽</div>
+            <div class="category-count">21 вакансия</div>
+        </div>
+    </div>
+
+    <a href="#" class="more-jobs">Ещё 13 профессий</a>
+
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
