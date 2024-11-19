@@ -5,6 +5,7 @@ import com.example.kegichivka.enums.DealType;
 import com.example.kegichivka.enums.PropertyType;
 import com.example.kegichivka.model.abstracts.BaseListing;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,12 +18,11 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class PropertyListing extends BaseListing {
     @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(nullable = false)
-    private String address;
 
     @Column
     private Integer rooms;

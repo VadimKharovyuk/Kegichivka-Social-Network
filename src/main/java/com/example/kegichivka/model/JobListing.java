@@ -27,6 +27,10 @@ public class JobListing extends BaseListing {
     @Column
     private String schedule;
 
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
     @Enumerated(EnumType.STRING)
     private EmploymentType employmentType;
 }

@@ -10,9 +10,8 @@ public class KegichivkaApplication {
         SpringApplication.run(KegichivkaApplication.class, args);
     }
 
-    //добавить регион для работы
-    //добавить категории для работы
-    //иконки
+
+
 
     //Вход с помощью Telegram
 
