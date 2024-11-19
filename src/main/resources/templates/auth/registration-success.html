@@ -2,10 +2,130 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Регистрация успешна</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81;
+            --success: #2ecc71;
+            --gray-100: #f8f9fa;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --radius-lg: 12px;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--gray-100);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--gray-800);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 var(--spacing-xl);
+            text-align: center;
+        }
+
+        .success-container h1 {
+            color: var(--success);
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .email-message {
+            background-color: rgba(46, 204, 113, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .email-message p {
+            margin: 0.5rem 0;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        .email-address {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .instruction {
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-top: var(--spacing-lg);
+        }
+    </style>
 </head>
 <body>
-<h1>Регистрация прошла успешно!</h1>
-<p>На ваш email <span th:text="${email}"></span> отправлено письмо для активации аккаунта.</p>
-<p>Пожалуйста, проверьте вашу почту и перейдите по ссылке для активации.</p>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="main-content">
+    <div class="success-container">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h1>
+            <i class="fas fa-user-plus"></i>
+            Регистрация прошла успешно!
+        </h1>
+
+        <div class="email-message">
+            <p>На ваш email <span class="email-address" th:text="${email}"></span> отправлено письмо для активации аккаунта.</p>
+        </div>
+
+        <p class="instruction">
+            <i class="fas fa-envelope"></i>
+            Пожалуйста, проверьте вашу почту и перейдите по ссылке для активации.
+        </p>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Регистрация успешна</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Регистрация прошла успешно!</h1>-->
+<!--<p>На ваш email <span th:text="${email}"></span> отправлено письмо для активации аккаунта.</p>-->
+<!--<p>Пожалуйста, проверьте вашу почту и перейдите по ссылке для активации.</p>-->
+<!--</body>-->
+<!--</html>-->

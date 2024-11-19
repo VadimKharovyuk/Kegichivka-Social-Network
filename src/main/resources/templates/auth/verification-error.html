@@ -4,42 +4,235 @@
     <title>Ошибка отправки письма</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81;
+            --error: #f03e3e;
+            --warning: #f59f00;
+            --gray-100: #f8f9fa;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --radius-lg: 12px;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--gray-100);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--gray-800);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .error-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            width: 100%;
+            max-width: 600px;
+            margin: 0 var(--spacing-xl);
+        }
+
+        h1 {
+            color: var(--error);
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h1 i {
+            font-size: 1.5rem;
+        }
+
+        .error-message {
+            background-color: rgba(240, 62, 62, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            color: var(--error);
+        }
+
+        .info-text {
+            background-color: rgba(245, 159, 0, 0.1);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .info-text p {
+            font-weight: 600;
+            margin-top: 0;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navigation-links {
+            margin: var(--spacing-xl) 0;
+        }
+
+        .navigation-links a {
+            color: var(--primary);
+            text-decoration: none;
+            padding: 0.5rem 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .navigation-links a:hover {
+            color: var(--error);
+        }
+
+        .contact-support {
+            border-top: 1px solid var(--gray-100);
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            color: var(--gray-700);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .contact-support i {
+            color: var(--warning);
+        }
+    </style>
 </head>
 <body>
-<div>
-    <h1>Ошибка отправки письма</h1>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
 
-    <div th:if="${error}" class="error-message">
-        <p th:text="${error}"></p>
-    </div>
+<div class="main-content">
+    <div class="error-container">
+        <h1>
+            <i class="fas fa-exclamation-triangle"></i>
+            Ошибка отправки письма
+        </h1>
 
-    <div class="info-text">
-        <p>Возможные причины ошибки:</p>
-        <ul>
-            <li>Неверный email адрес</li>
-            <li>Проблемы с сервером</li>
-            <li>Аккаунт уже подтвержден</li>
-        </ul>
-    </div>
+        <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
 
-    <div class="navigation-links">
-        <p>Вы можете:</p>
-        <ul>
-            <li>
-                <a th:href="@{/auth/register}">Вернуться на страницу регистрации</a>
-            </li>
-            <li>
-                <a th:href="@{/auth/resend-verification(email=${email})}">Попробовать отправить письмо снова</a>
-            </li>
-            <li>
-                <a th:href="@{/auth/login}">Перейти к входу</a>
-            </li>
-        </ul>
-    </div>
+        <div class="info-text">
+            <p>Возможные причины ошибки:</p>
+            <ul>
+                <li><i class="fas fa-times-circle"></i> Неверный email адрес</li>
+                <li><i class="fas fa-server"></i> Проблемы с сервером</li>
+                <li><i class="fas fa-check-double"></i> Аккаунт уже подтвержден</li>
+            </ul>
+        </div>
 
-    <div class="contact-support">
-        <p>Если проблема повторяется, пожалуйста, обратитесь в службу поддержки.</p>
+        <div class="navigation-links">
+            <p>Вы можете:</p>
+            <ul>
+                <li>
+                    <a th:href="@{/auth/register}">
+                        <i class="fas fa-arrow-left"></i>
+                        Вернуться на страницу регистрации
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/auth/resend-verification(email=${email})}">
+                        <i class="fas fa-redo"></i>
+                        Попробовать отправить письмо снова
+                    </a>
+                </li>
+                <li>
+                    <a th:href="@{/auth/login}">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Перейти к входу
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="contact-support">
+            <i class="fas fa-headset"></i>
+            <p>Если проблема повторяется, пожалуйста, обратитесь в службу поддержки.</p>
+        </div>
     </div>
 </div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Ошибка отправки письма</title>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div>-->
+<!--    <h1>Ошибка отправки письма</h1>-->
+
+<!--    <div th:if="${error}" class="error-message">-->
+<!--        <p th:text="${error}"></p>-->
+<!--    </div>-->
+
+<!--    <div class="info-text">-->
+<!--        <p>Возможные причины ошибки:</p>-->
+<!--        <ul>-->
+<!--            <li>Неверный email адрес</li>-->
+<!--            <li>Проблемы с сервером</li>-->
+<!--            <li>Аккаунт уже подтвержден</li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+<!--    <div class="navigation-links">-->
+<!--        <p>Вы можете:</p>-->
+<!--        <ul>-->
+<!--            <li>-->
+<!--                <a th:href="@{/auth/register}">Вернуться на страницу регистрации</a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a th:href="@{/auth/resend-verification(email=${email})}">Попробовать отправить письмо снова</a>-->
+<!--            </li>-->
+<!--            <li>-->
+<!--                <a th:href="@{/auth/login}">Перейти к входу</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </div>-->
+
+<!--    <div class="contact-support">-->
+<!--        <p>Если проблема повторяется, пожалуйста, обратитесь в службу поддержки.</p>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

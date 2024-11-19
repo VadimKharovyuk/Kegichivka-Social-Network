@@ -2,10 +2,126 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Активация успешна</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81;
+            --success: #2ecc71;
+            --gray-100: #f8f9fa;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --radius-lg: 12px;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--gray-100);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--gray-800);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 var(--spacing-xl);
+            text-align: center;
+        }
+
+        .success-container h1 {
+            color: var(--success);
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .success-container p {
+            color: var(--gray-700);
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.5;
+        }
+
+        .login-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--success);
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+        }
+
+        .login-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .success-icon {
+            font-size: 3rem;
+            color: var(--success);
+            margin-bottom: var(--spacing-lg);
+        }
+    </style>
 </head>
 <body>
-<h1>Активация аккаунта</h1>
-<p th:text="${message}"></p>
-<a href="/auth/login">Войти в систему</a>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="main-content">
+    <div class="success-container">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h1>
+            <i class="fas fa-user-check"></i>
+            Активация аккаунта
+        </h1>
+        <p th:text="${message}"></p>
+        <a href="/auth/login" class="login-link">
+            <i class="fas fa-sign-in-alt"></i>
+            Войти в систему
+        </a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Активация успешна</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Активация аккаунта</h1>-->
+<!--<p th:text="${message}"></p>-->
+<!--<a href="/auth/login">Войти в систему</a>-->
+<!--</body>-->
+<!--</html>-->

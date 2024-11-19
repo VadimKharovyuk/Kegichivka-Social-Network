@@ -2,10 +2,113 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Ошибка активации</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81;
+            --error: #f03e3e;
+            --gray-100: #f8f9fa;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --radius-lg: 12px;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--gray-100);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--gray-800);
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .error-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            width: 100%;
+            max-width: 500px;
+            margin: 0 var(--spacing-xl);
+            text-align: center;
+        }
+
+        .error-container h1 {
+            color: var(--error);
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .error-container p {
+            color: var(--gray-700);
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.5;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-lg);
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+    </style>
 </head>
 <body>
-<h1>Ошибка активации аккаунта</h1>
-<p th:text="${error}"></p>
-<a href="/auth/register">Вернуться к регистрации</a>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="main-content">
+    <div class="error-container">
+        <h1>Ошибка активации аккаунта</h1>
+        <p th:text="${error}"></p>
+        <a href="/auth/register" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            Вернуться к регистрации
+        </a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Ошибка активации</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Ошибка активации аккаунта</h1>-->
+<!--<p th:text="${error}"></p>-->
+<!--<a href="/auth/register">Вернуться к регистрации</a>-->
+<!--</body>-->
+<!--</html>-->
