@@ -2,98 +2,399 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Регистрация</title>
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0f4c81;
+            --primary-light: #1a6cb5;
+            --primary-dark: #093661;
+            --accent: #ff6b6b;
+            --accent-light: #ff8787;
+            --accent-dark: #fa5252;
+            --success: #37b24d;
+            --success-light: #40c057;
+            --success-dark: #2f9e44;
+            --warning: #f59f00;
+            --warning-light: #fcc419;
+            --warning-dark: #e67700;
+            --error: #f03e3e;
+            --error-light: #ff6b6b;
+            --error-dark: #e03131;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #868e96;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: var(--gray-100);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: var(--gray-800);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            box-sizing: border-box;
+        }
+
+        .registration-container {
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .form-header h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-header p {
+            color: var(--gray-600);
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group {
+            margin: 0;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--gray-700);
+            font-weight: 500;
+            margin-bottom: var(--spacing-xs);
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            background-color: white;
+            box-sizing: border-box;
+            height: 2.75rem;
+        }
+
+        textarea.form-control {
+            height: auto;
+            min-height: 100px;
+            padding-top: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+            outline: none;
+        }
+
+        .input-wrapper .icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-size: 1rem;
+        }
+
+        textarea + .icon {
+            top: 1rem;
+            transform: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            padding-right: 2rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23868e96' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+        }
+
+        .business-section {
+            background-color: var(--gray-100);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+            border: 1px solid var(--gray-200);
+        }
+
+        .business-section h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin: 0 0 var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .submit-button {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 0.875rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: var(--spacing-xs);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        #businessFields {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #businessFields.show {
+            max-height: 1000px;
+            opacity: 1;
+        }
+    </style>
 </head>
 <body>
-<h1>Регистрация нового пользователя</h1>
+<!-- Навигация -->
+<div th:replace="~{fragments/navigation :: navigation}"></div>
 
-<form th:action="@{/auth/register}" th:object="${registerRequest}" method="post">
-    <div>
-        <label for="email">Email:</label>
-        <input type="email" id="email" th:field="*{email}" required/>
-        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
-        <span th:if="${emailError}" th:text="${emailError}"></span>
-    </div>
+<div class="main-content">
+    <div class="page-container">
+        <div class="registration-container">
+            <div class="registration-container">
+                <div class="form-header">
+                    <h1>Регистрация нового пользователя</h1>
+                    <p>Создайте аккаунт для доступа ко всем возможностям платформы</p>
+                </div>
 
-    <div>
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" th:field="*{password}" required/>
-        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
-    </div>
+                <form th:action="@{/auth/register}" th:object="${registerRequest}" method="post">
+                    <div class="form-grid">
+                        <!-- Основные данные -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope icon"></i>
+                                <input type="email" class="form-control" id="email" th:field="*{email}" required/>
+                            </div>
+                            <div class="error-message" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                            <div class="error-message" th:if="${emailError}" th:text="${emailError}"></div>
+                        </div>
 
-    <div>
-        <label for="firstName">Имя:</label>
-        <input type="text" id="firstName" th:field="*{firstName}" required/>
-        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
-    </div>
+                        <div class="form-group">
+                            <label for="password">Пароль</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock icon"></i>
+                                <input type="password" class="form-control" id="password" th:field="*{password}"
+                                       required/>
+                            </div>
+                            <div class="error-message" th:if="${#fields.hasErrors('password')}"
+                                 th:errors="*{password}"></div>
+                        </div>
 
-    <div>
-        <label for="lastName">Фамилия:</label>
-        <input type="text" id="lastName" th:field="*{lastName}" required/>
-        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
-    </div>
+                        <div class="form-group">
+                            <label for="firstName">Имя</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user icon"></i>
+                                <input type="text" class="form-control" id="firstName" th:field="*{firstName}"
+                                       required/>
+                            </div>
+                            <div class="error-message" th:if="${#fields.hasErrors('firstName')}"
+                                 th:errors="*{firstName}"></div>
+                        </div>
 
-    <div>
-        <label for="dateOfBirth">Дата рождения:</label>
-        <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" required/>
-        <span th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
-    </div>
+                        <div class="form-group">
+                            <label for="lastName">Фамилия</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user icon"></i>
+                                <input type="text" class="form-control" id="lastName" th:field="*{lastName}" required/>
+                            </div>
+                            <div class="error-message" th:if="${#fields.hasErrors('lastName')}"
+                                 th:errors="*{lastName}"></div>
+                        </div>
 
-    <div>
-        <label for="phoneNumber">Телефон:</label>
-        <input type="text" id="phoneNumber" th:field="*{phoneNumber}"/>
-        <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
-    </div>
+                        <div class="form-group">
+                            <label for="dateOfBirth">Дата рождения</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-calendar icon"></i>
+                                <input type="date" class="form-control" id="dateOfBirth" th:field="*{dateOfBirth}"
+                                       required/>
+                            </div>
+                            <div class="error-message" th:if="${#fields.hasErrors('dateOfBirth')}"
+                                 th:errors="*{dateOfBirth}"></div>
+                        </div>
 
-    <div>
-        <label for="role">Тип аккаунта:</label>
-        <select id="role" th:field="*{role}" onchange="toggleBusinessFields()">
-            <option value="REGULAR_USER">Обычный пользователь</option>
-            <option value="BUSINESS_USER">Бизнес аккаунт</option>
-        </select>
-        <span th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
-    </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Телефон</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-phone icon"></i>
+                                <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}"/>
+                            </div>
+                            <div class="error-message" th:if="${#fields.hasErrors('phoneNumber')}"
+                                 th:errors="*{phoneNumber}"></div>
+                        </div>
 
-    <!-- Поля для бизнес-аккаунта -->
-    <div id="businessFields" style="display: none;">
-        <div>
-            <label for="companyName">Название компании:</label>
-            <input type="text" id="companyName" th:field="*{companyName}"/>
-            <span th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></span>
+                        <div class="form-group">
+                            <label for="role">Тип аккаунта</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user-tag icon"></i>
+                                <select class="form-control" id="role" th:field="*{role}"
+                                        onchange="toggleBusinessFields()">
+                                    <option value="REGULAR_USER">Обычный пользователь</option>
+                                    <option value="BUSINESS_USER">Бизнес аккаунт</option>
+                                </select>
+                            </div>
+                            <div class="error-message" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+                        </div>
+                    </div>
+
+                    <!-- Бизнес-секция -->
+                    <div id="businessFields" class="business-section">
+                        <h3><i class="fas fa-building"></i> Информация о компании</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="companyName">Название компании</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-building icon"></i>
+                                    <input type="text" class="form-control" id="companyName" th:field="*{companyName}"/>
+                                </div>
+                                <div class="error-message" th:if="${#fields.hasErrors('companyName')}"
+                                     th:errors="*{companyName}"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="businessType">Тип бизнеса</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-briefcase icon"></i>
+                                    <select class="form-control" id="businessType" th:field="*{businessType}">
+                                        <option value="EMPLOYER">Работодатель</option>
+                                        <option value="REAL_ESTATE_RENT">Аренда недвижимости</option>
+                                        <option value="REAL_ESTATE_SALE">Продажа недвижимости</option>
+                                        <option value="REAL_ESTATE_BOTH">Аренда и продажа недвижимости</option>
+                                        <option value="BUSINESS_ALL">Все услуги</option>
+                                    </select>
+                                </div>
+                                <div class="error-message" th:if="${#fields.hasErrors('businessType')}"
+                                     th:errors="*{businessType}"></div>
+                            </div>
+
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label for="companyDescription">Описание компании</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-align-left icon" style="top: 1rem;"></i>
+                                    <textarea class="form-control" id="companyDescription"
+                                              th:field="*{companyDescription}"
+                                              style="padding-left: 2.5rem;"></textarea>
+                                </div>
+                                <div class="error-message" th:if="${#fields.hasErrors('companyDescription')}"
+                                     th:errors="*{companyDescription}"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-button">
+                        <i class="fas fa-user-plus"></i> Зарегистрироваться
+                    </button>
+                </form>
+
+                <div class="form-footer">
+                    <p>Уже есть аккаунт? <a href="/auth/login">Войти</a></p>
+                </div>
+            </div>
         </div>
-
-        <div>
-            <label for="companyDescription">Описание компании:</label>
-            <textarea id="companyDescription" th:field="*{companyDescription}"></textarea>
-            <span th:if="${#fields.hasErrors('companyDescription')}" th:errors="*{companyDescription}"></span>
-        </div>
-
-        <div>
-            <label for="businessType">Тип бизнеса:</label>
-            <select id="businessType" th:field="*{businessType}">
-                <option value="EMPLOYER">Работодатель</option>
-                <option value="REAL_ESTATE_RENT">Аренда недвижимости</option>
-                <option value="REAL_ESTATE_SALE">Продажа недвижимости</option>
-                <option value="REAL_ESTATE_BOTH">Аренда и продажа недвижимости</option>
-                <option value="BUSINESS_ALL">Все услуги</option>
-            </select>
-            <span th:if="${#fields.hasErrors('businessType')}" th:errors="*{businessType}"></span>
-        </div>
     </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
-    <button type="submit">Зарегистрироваться</button>
-</form>
+
 
 <script>
     function toggleBusinessFields() {
-        var role = document.getElementById('role').value;
-        var businessFields = document.getElementById('businessFields');
-        businessFields.style.display = role === 'BUSINESS_USER' ? 'block' : 'none';
+        const role = document.getElementById('role').value;
+        const businessFields = document.getElementById('businessFields');
+        businessFields.classList.toggle('show', role === 'BUSINESS_USER');
     }
 
-    // Вызываем при загрузке страницы для корректного отображения
-    window.onload = function() {
-        toggleBusinessFields();
-    }
+    window.onload = toggleBusinessFields;
 </script>
 </body>
 </html>

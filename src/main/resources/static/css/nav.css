@@ -1,3 +1,10 @@
+
+:root {
+    --dark-blue: #0f4c81;
+    --gradient-main: linear-gradient(135deg, #2ecc71, #27ae60);
+    --gradient-secondary: linear-gradient(135deg, #f5f7fa, #e3e6e8);
+}
+
 nav {
     background: white;
     padding: 1rem;
@@ -5,6 +12,14 @@ nav {
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+
+.nav-list {
+    margin: 0;
+    padding: 0;
 }
 
 .nav-content {
@@ -40,7 +55,7 @@ nav {
 .login-button {
     background: var(--gradient-main);
     color: white;
-    border: none;
+    text-decoration: none;
     padding: 0.5rem 1.5rem;
     border-radius: 8px;
     cursor: pointer;
@@ -53,6 +68,7 @@ nav {
 .login-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+    color: white; /* Чтобы цвет текста не менялся при наведении */
 }
 
 @media (max-width: 768px) {

@@ -70,7 +70,6 @@ footer {
 }
 
 /* Нижняя часть футера */
-/* Нижняя часть футера */
 .footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     margin-top: 2rem;
@@ -93,14 +92,6 @@ footer {
 }
 
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .footer-bottom-content {
-        padding: 0 1rem;
-    }
-}
-
-
 .app-button {
     background: rgba(255, 255, 255, 0.1);
     padding: 0.5rem 1rem;
@@ -115,20 +106,3 @@ footer {
     background: rgba(255, 255, 255, 0.2);
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    .footer-content {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .footer-bottom-content {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .footer-content {
-        grid-template-columns: 1fr;
-    }
-}

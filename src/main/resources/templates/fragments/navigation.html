@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <title>Navigation Fragment</title>
+  <link rel="stylesheet" th:href="@{/css/nav.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
 <!-- Определяем фрагмент через th:fragment -->
 <nav th:fragment="navigation">
   <div class="nav-content">
     <ul class="nav-list">
+
       <li><a th:href="@{/}"><i class="fas fa-home"></i> Главная</a></li>
       <li><a th:href="@{/vacancies}"><i class="fas fa-search"></i> Поиск вакансий</a></li>
       <li><a th:href="@{/companies}"><i class="fas fa-users"></i> Компании</a></li>
       <li><a th:href="@{/blog}"><i class="fas fa-newspaper"></i> Блог</a></li>
     </ul>
-    <button class="login-button">
-      <a href="/auth/login"></a>
+    <a th:href="@{/auth/login}" class="login-button">
       <i class="fas fa-user"></i>
       Войти
-    </button>
+    </a>
   </div>
 </nav>
 </body>
