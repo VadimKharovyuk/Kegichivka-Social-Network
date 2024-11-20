@@ -30,7 +30,10 @@ public class SecurityConfig {
                         // Публичные эндпоинты
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("admins/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/articles/create").permitAll()
+                        .requestMatchers("/articles/create/**").permitAll()
                         // Статические ресурсы
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         // Swagger UI
@@ -39,16 +42,17 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/business/**").permitAll()
                         .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/admins/register", "/admins/verify",
+                                "/admins/verification-sent", "/admins/resend-verification").permitAll()
+
+
+
                         .anyRequest().authenticated()
                 )
                 // Отключаем сессии, так как используем JWT
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // Отключаем стандартную форму логина, так как используем JWT
-//                .formLogin(AbstractHttpConfigurer::disable)
-                // Отключаем базовую аутентификацию
-//                .httpBasic(AbstractHttpConfigurer::disable)
                 // Добавляем JWT фильтр
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 // Настраиваем обработку исключений

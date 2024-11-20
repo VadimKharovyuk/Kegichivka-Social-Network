@@ -5,6 +5,7 @@ import com.example.kegichivka.dto.LoginRequestDto;
 import com.example.kegichivka.dto.RegisterRequestDto;
 import com.example.kegichivka.enums.UserRole;
 import com.example.kegichivka.exception.EmailAlreadyExistsException;
+import com.example.kegichivka.exception.TokenExpiredException;
 import com.example.kegichivka.exception.UsernameNotFoundException;
 import com.example.kegichivka.service.AuthService;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +24,11 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
     private final AuthService authService;
+
+    @GetMapping("/activation-success")
+    public String showActivationSuccess() {
+        return "auth/activation-success";
+    }
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -55,19 +61,26 @@ public class AuthController {
     }
 
     @GetMapping("/activate")
-    public String activateAccount(@RequestParam("token") String token, Model model) {
-        log.debug("Processing account activation for token: {}", token);
+    public String activateAccount(@RequestParam String token, Model model) {
         try {
+            log.debug("Attempting to activate account with token: {}", token);
             authService.activateAccount(token);
-            log.debug("Account activation successful");
-            model.addAttribute("message", "Аккаунт успешно активирован!");
-            return "auth/activation-success";
+            return "redirect:/auth/activation-success";
+        } catch (TokenExpiredException e) {
+            log.error("Token activation failed: {}", e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            return "auth/activation-error";
+        } catch (IllegalStateException e) {
+            log.error("Account activation failed: {}", e.getMessage());
+            model.addAttribute("error", e.getMessage());
+            return "auth/activation-error";
         } catch (Exception e) {
-            log.error("Account activation failed", e);
-            model.addAttribute("error", "Ошибка активации: " + e.getMessage());
+            log.error("Unexpected error during activation: {}", e.getMessage());
+            model.addAttribute("error", "Произошла ошибка при активации аккаунта");
             return "auth/activation-error";
         }
     }
+
 
     @GetMapping("/resend-verification")
     public String resendVerification(@RequestParam String email, Model model) {
@@ -106,7 +119,7 @@ public class AuthController {
             if (response.getUser().getRole() == UserRole.BUSINESS_USER) {
                 return "redirect:/business/dashboard";
             } else if (response.getUser().getRole() == UserRole.ADMIN) {
-                return "redirect:/admin/dashboard";
+                return "redirect:/admins/dashboard";
             } else {
                 return "redirect:/user/dashboard";
             }

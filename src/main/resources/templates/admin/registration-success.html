@@ -1,0 +1,33 @@
+<!-- templates/auth/activation-success.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Активация успешна</title>
+</head>
+<body>
+<div>
+    <h2>Активация аккаунта</h2>
+    <div th:if="${message}" class="alert alert-success">
+        <p th:text="${message}">Успешно!</p>
+    </div>
+    <p>Теперь вы можете <a href="/auth/login">войти в систему</a>.</p>
+</div>
+</body>
+</html>
+
+<!-- templates/auth/activation-error.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Ошибка активации</title>
+</head>
+<body>
+<div>
+    <h2>Ошибка активации аккаунта</h2>
+    <div th:if="${error}" class="alert alert-danger">
+        <p th:text="${error}">Ошибка</p>
+    </div>
+    <p>Вы можете запросить <a href="/auth/resend-verification">повторную отправку письма</a>.</p>
+</div>
+</body>
+</html>

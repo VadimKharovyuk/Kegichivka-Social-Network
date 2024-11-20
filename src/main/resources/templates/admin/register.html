@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Registration</title>
+</head>
+<body>
+<h1>Admin Registration</h1>
+
+<form th:action="@{/admins/register}" th:object="${createAdminRequest}" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" required>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+    </div>
+
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" th:field="*{password}" required>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    </div>
+
+    <div>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" th:field="*{firstName}" required>
+        <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+    </div>
+
+    <div>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" th:field="*{lastName}" required>
+        <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+    </div>
+
+    <div>
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" required>
+        <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+    </div>
+
+    <div>
+        <label for="dateOfBirth">Date of Birth:</label>
+        <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" required>
+        <span th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
+    </div>
+
+    <div>
+        <label for="permissions">Permissions:</label>
+        <select id="permissions" th:field="*{permissions}" multiple required>
+            <option value="READ">Read</option>
+            <option value="WRITE">Write</option>
+            <option value="DELETE">Delete</option>
+            <option value="MANAGE_USERS">Manage Users</option>
+        </select>
+        <span th:if="${#fields.hasErrors('permissions')}" th:errors="*{permissions}"></span>
+    </div>
+
+    <div>
+        <label for="profilePhoto">Profile Photo:</label>
+        <input type="file" id="profilePhoto" name="profilePhoto" accept="image/*">
+    </div>
+
+    <button type="submit">Register</button>
+</form>
+</body>
+</html>

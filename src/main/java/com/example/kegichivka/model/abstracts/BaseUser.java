@@ -37,7 +37,7 @@ public abstract class BaseUser {
     private String phoneNumber;
 
 
-    @Column(nullable = false)  // делаем обязательным
+    @Column(nullable = false)
     private LocalDate dateOfBirth;
     @Column
     private String profilePhotoUrl;

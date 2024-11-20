@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Articles</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold">Articles</h1>
+        <a href="/articles/create" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Create New Article
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="article : ${articles}" class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div th:if="${!article.photoUrls.empty}" class="h-48 overflow-hidden">
+                <img th:src="${article.photoUrls[0]}" class="w-full h-full object-cover">
+            </div>
+            <div class="p-4">
+                <h2 class="text-xl font-semibold mb-2" th:text="${article.title}"></h2>
+                <p class="text-gray-600 mb-4" th:text="${article.summary}"></p>
+                <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-500"
+                              th:text="${#temporals.format(article.publishedAt, 'dd MMM yyyy')}"></span>
+                    <a th:href="@{/articles/{id}(id=${article.id})}"
+                       class="text-blue-500 hover:text-blue-700">Read more</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
