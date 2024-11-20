@@ -1,6 +1,7 @@
 package com.example.kegichivka.model.abstracts;
 
 import com.example.kegichivka.model.Admin;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public abstract class BaseContent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private Admin author;
@@ -36,10 +39,7 @@ public abstract class BaseContent {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @ElementCollection
-    @CollectionTable(name = "content_photos")
-    @Column(name = "photo_url")
-    private List<String> photoUrls = new ArrayList<>();
+
 
     @Column
     private int likesCount = 0;

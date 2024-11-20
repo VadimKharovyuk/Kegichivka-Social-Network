@@ -8,6 +8,15 @@
 <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6">Create New Article</h1>
 
+    <!-- Сообщения об успехе/ошибке -->
+    <div th:if="${successMessage}" class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+        <p th:text="${successMessage}"></p>
+    </div>
+
+    <div th:if="${errorMessage}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
     <form th:action="@{/articles/create}" method="post" enctype="multipart/form-data" class="bg-white rounded-lg shadow-md p-6">
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
@@ -45,19 +54,115 @@
             <label class="block text-gray-700 text-sm font-bold mb-2" for="photos">
                 Photos
             </label>
-            <input type="file" id="photos" name="photos" multiple accept="image/*"
-                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div class="flex items-center justify-center w-full">
+                <label for="photos" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                        </svg>
+                        <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                        <p class="text-xs text-gray-500">PNG, JPG or GIF (MAX. 5MB)</p>
+                    </div>
+                    <input type="file" id="photos" name="photos" multiple accept="image/*" class="hidden" onChange="previewImages(this)"/>
+                </label>
+            </div>
+            <div id="imagePreview" class="grid grid-cols-3 gap-4 mt-4"></div>
+            <div id="uploadProgress" class="hidden mt-4">
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
         </div>
 
         <div class="flex items-center justify-between">
-            <button type="submit"
-                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            <button type="submit" id="submitButton"
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all duration-200">
                 Create Article
             </button>
             <a href="/articles"
-               class="text-blue-500 hover:text-blue-700">Cancel</a>
+               class="text-blue-500 hover:text-blue-700 transition-all duration-200">Cancel</a>
         </div>
     </form>
 </div>
+
+<script>
+    function previewImages(input) {
+        const preview = document.getElementById('imagePreview');
+        preview.innerHTML = '';
+
+        if (input.files) {
+            const maxSize = 5 * 1024 * 1024;
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+            Array.from(input.files).forEach(file => {
+                if (file.size > maxSize) {
+                    alert(`File ${file.name} is too large. Maximum size is 5MB`);
+                    return;
+                }
+                if (!allowedTypes.includes(file.type)) {
+                    alert(`File ${file.name} has invalid type. Allowed types are JPG, PNG, GIF`);
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const div = document.createElement('div');
+                    div.className = 'relative group';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="preview" class="w-full h-32 object-cover rounded-lg"/>
+                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                            <button onclick="removeImage(this)" class="text-white hover:text-red-500 transition-colors duration-200">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+
+    function removeImage(button) {
+        const div = button.closest('div.relative');
+        div.remove();
+    }
+
+    document.querySelector('form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitButton = document.getElementById('submitButton');
+        const progressBar = document.getElementById('progressBar');
+        const uploadProgress = document.getElementById('uploadProgress');
+
+        try {
+            submitButton.disabled = true;
+            submitButton.classList.add('opacity-50');
+            uploadProgress.classList.remove('hidden');
+
+            const formData = new FormData(e.target);
+
+            const response = await fetch(e.target.action, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            alert('Error uploading article: ' + error.message);
+        } finally {
+            submitButton.disabled = false;
+            submitButton.classList.remove('opacity-50');
+            uploadProgress.classList.add('hidden');
+        }
+    });
+</script>
 </body>
 </html>

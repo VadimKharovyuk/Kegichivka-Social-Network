@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="jwt-token" th:if="${jwtToken}" th:content="${jwtToken}" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель администратора</title>
@@ -35,7 +36,7 @@
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row">
+
         <!-- Боковое меню -->
         <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
             <div class="position-sticky pt-3">
@@ -81,123 +82,57 @@
             </div>
         </nav>
 
-<!--        &lt;!&ndash; Основной контент &ndash;&gt;-->
-<!--        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">-->
-<!--            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">-->
-<!--                <h1 class="h2">Панель управления</h1>-->
-<!--                <div class="btn-toolbar mb-2 mb-md-0">-->
-<!--                    <button type="button" class="btn btn-sm btn-outline-secondary">-->
-<!--                        <i class="fas fa-download me-1"></i> Экспорт-->
-<!--                    </button>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; Статистика &ndash;&gt;-->
-<!--            <div class="row mb-4">-->
-<!--                <div class="col-md-3">-->
-<!--                    <div class="card stat-card bg-primary text-white">-->
-<!--                        <div class="card-body">-->
-<!--                            <h5 class="card-title">Пользователи</h5>-->
-<!--                            <h2 class="card-text" th:text="${userCount}">0</h2>-->
-<!--                            <p class="mb-0"><small>Всего зарегистрировано</small></p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-md-3">-->
-<!--                    <div class="card stat-card bg-success text-white">-->
-<!--                        <div class="card-body">-->
-<!--                            <h5 class="card-title">Новости</h5>-->
-<!--                            <h2 class="card-text" th:text="${newsCount}">0</h2>-->
-<!--                            <p class="mb-0"><small>Опубликовано</small></p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-md-3">-->
-<!--                    <div class="card stat-card bg-info text-white">-->
-<!--                        <div class="card-body">-->
-<!--                            <h5 class="card-title">Статьи</h5>-->
-<!--                            <h2 class="card-text" th:text="${articlesCount}">0</h2>-->
-<!--                            <p class="mb-0"><small>Размещено</small></p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-md-3">-->
-<!--                    <div class="card stat-card bg-warning text-white">-->
-<!--                        <div class="card-body">-->
-<!--                            <h5 class="card-title">Активность</h5>-->
-<!--                            <h2 class="card-text" th:text="${activeUsersCount}">0</h2>-->
-<!--                            <p class="mb-0"><small>Активных пользователей</small></p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            &lt;!&ndash; Последние действия &ndash;&gt;-->
-<!--            <div class="row">-->
-<!--                <div class="col-md-6">-->
-<!--                    <div class="card">-->
-<!--                        <div class="card-header">-->
-<!--                            <h5 class="mb-0">Последние регистрации</h5>-->
-<!--                        </div>-->
-<!--                        <div class="card-body">-->
-<!--                            <div class="table-responsive">-->
-<!--                                <table class="table table-hover">-->
-<!--                                    <thead>-->
-<!--                                    <tr>-->
-<!--                                        <th>Пользователь</th>-->
-<!--                                        <th>Дата</th>-->
-<!--                                        <th>Статус</th>-->
-<!--                                    </tr>-->
-<!--                                    </thead>-->
-<!--                                    <tbody>-->
-<!--                                    <tr th:each="user : ${recentUsers}">-->
-<!--                                        <td th:text="${user.email}">user@example.com</td>-->
-<!--                                        <td th:text="${#temporals.format(user.registrationDate, 'dd.MM.yyyy')}">01.01.2024</td>-->
-<!--                                        <td>-->
-<!--                                            <span class="badge bg-success" th:if="${user.accountStatus.name() == 'ACTIVE'}">Активен</span>-->
-<!--                                            <span class="badge bg-warning" th:if="${user.accountStatus.name() == 'PENDING_ACTIVATION'}">Ожидает</span>-->
-<!--                                        </td>-->
-<!--                                    </tr>-->
-<!--                                    </tbody>-->
-<!--                                </table>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="col-md-6">-->
-<!--                    <div class="card">-->
-<!--                        <div class="card-header">-->
-<!--                            <h5 class="mb-0">Последние новости</h5>-->
-<!--                        </div>-->
-<!--                        <div class="card-body">-->
-<!--                            <div class="table-responsive">-->
-<!--                                <table class="table table-hover">-->
-<!--                                    <thead>-->
-<!--                                    <tr>-->
-<!--                                        <th>Заголовок</th>-->
-<!--                                        <th>Автор</th>-->
-<!--                                        <th>Дата</th>-->
-<!--                                    </tr>-->
-<!--                                    </thead>-->
-<!--                                    <tbody>-->
-<!--                                    <tr th:each="news : ${recentNews}">-->
-<!--                                        <td th:text="${news.title}">Заголовок новости</td>-->
-<!--                                        <td th:text="${news.author}">Автор</td>-->
-<!--                                        <td th:text="${#temporals.format(news.createdAt, 'dd.MM.yyyy')}">01.01.2024</td>-->
-<!--                                    </tr>-->
-<!--                                    </tbody>-->
-<!--                                </table>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </main>-->
-<!--    </div>-->
-<!--</div>-->
 
 <!-- Форма для логаута -->
-<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;"></form>
+<form id="logoutForm" th:action="@{/auth/logout}" method="post" style="display: none;"></form>
+    <script>
+        // Получаем токен из мета-тега
+        const token = document.querySelector('meta[name="jwt-token"]').content;
+
+        // Используем токен в запросах
+        fetch('/admin/dashboard', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+    </script>
+    <script>
+        // Функция для добавления токена к запросам
+        function addAuthHeader() {
+            const token = localStorage.getItem('jwt_token');
+            if (token) {
+                // Добавляем токен ко всем fetch запросам
+                const originalFetch = window.fetch;
+                window.fetch = function() {
+                    let [resource, config] = arguments;
+                    if(config === undefined) {
+                        config = {};
+                    }
+                    if(config.headers === undefined) {
+                        config.headers = {};
+                    }
+                    config.headers['Authorization'] = `Bearer ${token}`;
+                    return originalFetch(resource, config);
+                };
+
+                // Добавляем токен к ajax запросам если используете jQuery
+                if (window.jQuery) {
+                    $.ajaxSetup({
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                }
+            }
+        }
+
+        // Вызываем функцию при загрузке страницы
+        addAuthHeader();
+    </script>
+    <script th:if="${jwtToken}">
+        // Сохраняем токен в localStorage после успешного логина
+        localStorage.setItem('jwt_token', document.querySelector('meta[name="jwt-token"]').content);
+    </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

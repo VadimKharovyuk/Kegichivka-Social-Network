@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 @Data
@@ -14,9 +15,8 @@ import java.util.Set;
 public class CreateArticleRequest {
     private String title;
     private String content;
-    private List<String> photoUrls;
-    private Set<String> tags;
     private String summary;
-    private boolean isPublished;
+    private Set<String> tags;
+    private List<String> photoUrls = new ArrayList<>(); // Для хранения URL фотографий
 }
 

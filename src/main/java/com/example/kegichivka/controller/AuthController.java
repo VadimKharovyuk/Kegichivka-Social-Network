@@ -8,6 +8,8 @@ import com.example.kegichivka.exception.EmailAlreadyExistsException;
 import com.example.kegichivka.exception.TokenExpiredException;
 import com.example.kegichivka.exception.UsernameNotFoundException;
 import com.example.kegichivka.service.AuthService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -104,40 +106,114 @@ public class AuthController {
     public String login(@Valid @ModelAttribute("loginRequest") LoginRequestDto request,
                         BindingResult result,
                         Model model,
-                        HttpSession session) {
+                        HttpSession session,
+                        HttpServletResponse response) {
         if (result.hasErrors()) {
             return "auth/login";
         }
 
         try {
-            JwtResponseDto response = authService.login(request);
-            // Сохраняем токены в сессии (или можно использовать куки)
-            session.setAttribute("accessToken", response.getAccessToken());
-            session.setAttribute("refreshToken", response.getRefreshToken());
+            JwtResponseDto jwtResponse = authService.login(request);
+
+            // Сохраняем токены в сессии
+            session.setAttribute("accessToken", jwtResponse.getAccessToken());
+            session.setAttribute("refreshToken", jwtResponse.getRefreshToken());
+
+            // Создаем cookies для токенов
+            Cookie accessTokenCookie = new Cookie("jwt_token", jwtResponse.getAccessToken());
+            accessTokenCookie.setHttpOnly(true);
+            accessTokenCookie.setPath("/");
+            accessTokenCookie.setMaxAge(3600); // 1 час
+            response.addCookie(accessTokenCookie);
+
+            // Добавляем токен в заголовок ответа
+            response.setHeader("Authorization", "Bearer " + jwtResponse.getAccessToken());
+
+            // Добавляем скрипт для сохранения токена в localStorage
+            model.addAttribute("jwtToken", jwtResponse.getAccessToken());
+
+            log.info("User {} successfully logged in", request.getEmail());
 
             // Перенаправляем в зависимости от роли
-            if (response.getUser().getRole() == UserRole.BUSINESS_USER) {
-                return "redirect:/business/dashboard";
-            } else if (response.getUser().getRole() == UserRole.ADMIN) {
-                return "redirect:/admins/dashboard";
-            } else {
-                return "redirect:/user/dashboard";
-            }
+            return switch (jwtResponse.getUser().getRole()) {
+                case BUSINESS_USER -> "redirect:/business/dashboard";
+                case ADMIN -> "redirect:/admins/dashboard";
+                default -> "redirect:/user/dashboard";
+            };
+
         } catch (UsernameNotFoundException e) {
+            log.warn("Login attempt failed: User not found - {}", request.getEmail());
             model.addAttribute("emailError", "Пользователь не найден");
             return "auth/login";
         } catch (BadCredentialsException e) {
+            log.warn("Login attempt failed: Invalid password for user - {}", request.getEmail());
             model.addAttribute("passwordError", "Неверный пароль");
             return "auth/login";
         } catch (Exception e) {
+            log.error("Login error", e);
             model.addAttribute("error", "Ошибка входа: " + e.getMessage());
             return "auth/login";
         }
     }
 
+    @GetMapping("/logout")
+    public String logout(HttpSession session,
+                         HttpServletResponse response,
+                         @CookieValue(name = "jwt_token", required = false) Cookie jwtCookie) {
+        // Очищаем сессию
+        session.invalidate();
+
+        // Удаляем cookie
+        if (jwtCookie != null) {
+            jwtCookie.setMaxAge(0);
+            jwtCookie.setPath("/");
+            response.addCookie(jwtCookie);
+        }
+
+        return "redirect:/auth/login?logout";
+    }
     @PostMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/auth/login";
     }
 }
+
+
+//    @PostMapping("/login")
+//    public String login(@Valid @ModelAttribute("loginRequest") LoginRequestDto request,
+//                        BindingResult result,
+//                        Model model,
+//                        HttpSession session) {
+//        if (result.hasErrors()) {
+//            return "auth/login";
+//        }
+//
+//        try {
+//            JwtResponseDto response = authService.login(request);
+//            // Сохраняем токены в сессии (или можно использовать куки)
+//            session.setAttribute("accessToken", response.getAccessToken());
+//            session.setAttribute("refreshToken", response.getRefreshToken());
+//
+//            // Перенаправляем в зависимости от роли
+//            if (response.getUser().getRole() == UserRole.BUSINESS_USER) {
+//                return "redirect:/business/dashboard";
+//            } else if (response.getUser().getRole() == UserRole.ADMIN) {
+//                return "redirect:/admins/dashboard";
+//            } else {
+//                return "redirect:/user/dashboard";
+//            }
+//        } catch (UsernameNotFoundException e) {
+//            model.addAttribute("emailError", "Пользователь не найден");
+//            return "auth/login";
+//        } catch (BadCredentialsException e) {
+//            model.addAttribute("passwordError", "Неверный пароль");
+//            return "auth/login";
+//        } catch (Exception e) {
+//            model.addAttribute("error", "Ошибка входа: " + e.getMessage());
+//            return "auth/login";
+//        }
+//    }
+
+
+

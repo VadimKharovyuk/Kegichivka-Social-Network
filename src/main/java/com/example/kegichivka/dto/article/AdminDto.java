@@ -8,11 +8,12 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 import java.util.Set;
+
 @Data
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminDto extends BaseUserDto {
     private Set<String> permissions;
-    private List<ArticleDto> articles;
+
 }

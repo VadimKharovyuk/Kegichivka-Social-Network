@@ -1,5 +1,6 @@
 package com.example.kegichivka.service;
 
+import com.example.kegichivka.dto.admin.AdminDashboardDto;
 import com.example.kegichivka.dto.admin.AdminResponse;
 import com.example.kegichivka.dto.admin.CreateAdminRequest;
 import com.example.kegichivka.dto.admin.UpdateAdminRequest;
@@ -9,15 +10,19 @@ import com.example.kegichivka.enums.VerificationStatus;
 import com.example.kegichivka.exception.*;
 import com.example.kegichivka.maper.admin.AdminMapper;
 import com.example.kegichivka.model.Admin;
+import com.example.kegichivka.model.abstracts.BaseUser;
 import com.example.kegichivka.repositoty.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Named;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 @Slf4j
 @Service
@@ -171,6 +176,7 @@ public class AdminService {
                 .orElseThrow(() -> new ResourceNotFoundException("Admin not found"));
     }
 
+
     public AdminResponse updateProfilePhoto(Long id, byte[] photoData) {
         return adminRepository.findById(id)
                 .map(admin -> {
@@ -218,8 +224,41 @@ public class AdminService {
         log.debug("Deleted admin with id: {}", id);
     }
 
+    public AdminDashboardDto loadAdminDashboard(String email) {
+        log.debug("Loading dashboard data for admin with email: {}", email);
+
+        try {
+            // Находим админа
+            Admin admin = adminRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("Admin not found with email: " + email));
+
+            // Маппим базовые данные
+            AdminDashboardDto dashboardDto = adminMapper.toDto(admin);
+
+            // Здесь можно добавить обновление статистики
+            // Например:
+            // Long totalUsers = userRepository.count();
+            // Long totalNews = newsRepository.count();
+            // Long totalArticles = articleRepository.count();
+            // dashboardMapper.updateStats(dashboardDto, totalUsers, totalNews, totalArticles);
+
+            return dashboardDto;
+
+        } catch (ResourceNotFoundException e) {
+            log.error("Failed to find admin: {}", e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("Error loading dashboard data", e);
+            throw new RuntimeException("Failed to load dashboard data", e);
+        }
+    }
 
 
-
-
+    public Admin findByEmail(String email) {
+        return adminRepository.findByEmail(email)
+                .orElseThrow(() -> {
+                    log.error("Admin not found with email: {}", email);
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Admin not found");
+                });
+    }
 }

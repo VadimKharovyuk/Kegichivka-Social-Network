@@ -1,13 +1,11 @@
 package com.example.kegichivka.maper.admin;
 
+import com.example.kegichivka.dto.admin.AdminDashboardDto;
 import com.example.kegichivka.dto.admin.AdminResponse;
 import com.example.kegichivka.dto.admin.CreateAdminRequest;
 import com.example.kegichivka.dto.admin.UpdateAdminRequest;
 import com.example.kegichivka.model.Admin;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring")
 public interface AdminMapper {
@@ -26,4 +24,17 @@ public interface AdminMapper {
     AdminResponse toResponse(Admin admin);
 
     void updateAdminFromDto(UpdateAdminRequest request, @MappingTarget Admin admin);
+
+
+
+
+    @Mapping(target = "admin", source = "admin")
+    @Mapping(target = "totalUsers", constant = "0L")  // Заглушка, позже заменим на реальные данные
+    @Mapping(target = "totalNews", constant = "0L")   // Заглушка, позже заменим на реальные данные
+    @Mapping(target = "totalArticles", constant = "0L") // Заглушка, позже заменим на реальные данные
+    AdminDashboardDto toDto(Admin admin);
+
+    @InheritInverseConfiguration
+    Admin fromDto(AdminDashboardDto dto);
+
 }

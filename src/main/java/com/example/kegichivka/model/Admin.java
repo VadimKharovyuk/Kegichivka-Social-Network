@@ -2,6 +2,7 @@ package com.example.kegichivka.model;
 
 import com.example.kegichivka.enums.AccountStatus;
 import com.example.kegichivka.model.abstracts.BaseUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,11 +27,12 @@ public class Admin extends BaseUser  implements UserDetails {
     @Column(name = "verification_token_expiry")
     private LocalDateTime verificationTokenExpiry;
     //разрешения
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(nullable = false)
     private Set<String> permissions = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @JsonIgnore // Игнорируем при сериализации
     private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)

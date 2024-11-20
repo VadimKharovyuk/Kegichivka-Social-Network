@@ -7,14 +7,16 @@
 <body class="bg-gray-100">
 <div class="container mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <!-- Hero Image Section -->
         <div th:if="${!article.photoUrls.empty}" class="relative h-96">
-            <img th:src="${article.photoUrls[0]}" class="w-full h-full object-cover">
+            <img th:src="${article.photoUrls[0]}" class="w-full h-full object-cover" alt="Hero image">
             <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-6">
                 <h1 class="text-4xl font-bold text-white" th:text="${article.title}"></h1>
             </div>
         </div>
 
         <div class="p-6">
+            <!-- Author Info and Actions -->
             <div class="flex justify-between items-center mb-6">
                 <div>
                     <p class="text-gray-600" th:text="${'By ' + article.author.firstName + ' ' + article.author.lastName}"></p>
@@ -22,19 +24,23 @@
                        th:text="${#temporals.format(article.publishedAt, 'dd MMM yyyy')}"></p>
                 </div>
                 <div class="flex items-center gap-4">
+                    <!-- Like Button -->
                     <form th:action="@{/articles/{id}/like(id=${article.id})}" method="post" class="inline">
-                        <button type="submit" class="text-gray-600 hover:text-red-500">
+                        <button type="submit" class="text-gray-600 hover:text-red-500 transition-colors duration-200">
                             ❤️ <span th:text="${article.likesCount}"></span>
                         </button>
                     </form>
-                    <div th:if="${article.author.id == #authentication.principal.id}">
-                        <a th:href="@{/articles/{id}/edit(id=${article.id})}"
-                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            Edit
-                        </a>
+
+                    <!-- Author Actions -->
+<!--                    <div th:if="${article.author.id == #authentication.principal.id}"-->
+<!--                         class="flex items-center gap-2">-->
+<!--                        <a th:href="@{/articles/{id}/edit(id=${article.id})}"-->
+<!--                           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200">-->
+<!--                            Edit-->
+<!--                        </a>-->
                         <form th:action="@{/articles/{id}/delete(id=${article.id})}" method="post" class="inline">
                             <button type="submit"
-                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200"
                                     onclick="return confirm('Are you sure you want to delete this article?')">
                                 Delete
                             </button>
@@ -43,27 +49,47 @@
                 </div>
             </div>
 
+            <!-- Article Content -->
             <div class="prose max-w-none">
                 <p class="text-gray-600 text-lg mb-6" th:text="${article.summary}"></p>
                 <div th:utext="${article.content}" class="mb-6"></div>
             </div>
 
-            <div th:if="${!article.photoUrls.empty}" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-                <div th:each="photoUrl : ${article.photoUrls}" class="h-48">
-                    <img th:src="${photoUrl}" class="w-full h-full object-cover rounded">
+            <!-- Photo Gallery -->
+            <div th:if="${!article.photoUrls.empty and article.photoUrls.size() > 1}"
+                 class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                <div th:each="photoUrl, stat : ${article.photoUrls}"
+                     th:if="${stat.index > 0}"
+                     class="relative group h-48">
+                    <img th:src="${photoUrl}"
+                         class="w-full h-full object-cover rounded transition-transform duration-200 group-hover:scale-105"
+                         th:alt="'Photo ' + ${stat.count}">
+                    <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-200 rounded"></div>
                 </div>
             </div>
 
-            <div class="mt-6">
+            <!-- Tags -->
+            <div th:if="${!article.tags.empty}" class="mt-6">
                 <div class="flex flex-wrap gap-2">
-                        <span th:each="tag : ${article.tags}"
-                              class="bg-gray-200 rounded-full px-3 py-1 text-sm text-gray-700">
-                            #<span th:text="${tag}"></span>
-                        </span>
+                    <span th:each="tag : ${article.tags}"
+                          class="bg-gray-200 hover:bg-gray-300 rounded-full px-3 py-1 text-sm text-gray-700 transition-colors duration-200">
+                        #<span th:text="${tag}"></span>
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    // Добавляем анимацию для лайков
+    document.querySelector('form[action*="/like"]').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const button = this.querySelector('button');
+        button.classList.add('scale-125');
+        setTimeout(() => button.classList.remove('scale-125'), 200);
+        this.submit();
+    });
+</script>
 </body>
 </html>

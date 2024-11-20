@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" th:href="@{/css/nav.css}">
   <link rel="stylesheet" th:href="@{/css/footer.css}">
+  <meta name="jwt-token" th:if="${jwtToken}" th:content="${jwtToken}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     :root {
@@ -237,6 +238,42 @@
 </div>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script>
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: document.getElementById('email').value,
+          password: document.getElementById('password').value
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Сохраняем токен
+        localStorage.setItem('jwt_token', data.accessToken);
+        // Редирект на дашборд
+        window.location.href = '/admin/dashboard';
+      } else {
+        alert('Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login error occurred');
+    }
+  });
+
+</script>
+<script th:if="${jwtToken}">
+  // Сохраняем токен в localStorage после успешного логина
+  localStorage.setItem('jwt_token', document.querySelector('meta[name="jwt-token"]').content);
+</script>
 </body>
 </html>
 

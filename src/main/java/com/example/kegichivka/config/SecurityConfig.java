@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final UserDetailsService userDetailsService;
+    private final AuthenticationProvider authenticationProvider;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("admins/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/articles/create").permitAll()
-                        .requestMatchers("/articles/create/**").permitAll()
+                        .requestMatchers("/articles//").permitAll()
                         // Статические ресурсы
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         // Swagger UI
@@ -41,21 +41,16 @@ public class SecurityConfig {
                         // Защищенные эндпоинты
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/business/**").permitAll()
-                        .requestMatchers("/admin/**").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/admins/register", "/admins/verify",
                                 "/admins/verification-sent", "/admins/resend-verification").permitAll()
-
-
-
                         .anyRequest().authenticated()
                 )
-                // Отключаем сессии, так как используем JWT
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                // Добавляем JWT фильтр
+                .authenticationProvider(authenticationProvider)  // Добавляем провайдер здесь
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                // Настраиваем обработку исключений
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setContentType("application/json");
@@ -73,17 +68,17 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
-        return authProvider;
-    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    public AuthenticationProvider authenticationProvider() {
+//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//        authProvider.setUserDetailsService(userDetailsService);
+//        authProvider.setPasswordEncoder(passwordEncoder());
+//        return authProvider;
+//    }
 }

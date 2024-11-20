@@ -156,34 +156,8 @@ public class AuthService {
                 .expiresIn(jwtProperties.getAccessTokenExpiration())
                 .build();
     }
-//    public JwtResponseDto login(LoginRequestDto request) {
-//        // Находим пользователя в обоих репозиториях
-//        BaseUser user = regularUserRepository.findByEmail(request.getEmail())
-//                .map(u -> (BaseUser) u)
-//                .orElseGet(() -> businessUserRepository.findByEmail(request.getEmail())
-//                        .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден")));
-//
-//        // Проверяем пароль
-//        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-//            throw new BadCredentialsException("Неверный пароль");
-//        }
-//
-//        // Проверяем статус аккаунта
-//        if (user.getAccountStatus() != AccountStatus.ACTIVE) {
-//            throw new BadCredentialsException("Аккаунт не активирован");
-//        }
-//
-//        // Генерируем токены
-//        String accessToken = jwtService.generateAccessToken(user);
-//        String refreshToken = jwtService.generateRefreshToken(user);
-//
-//        return JwtResponseDto.builder()
-//                .accessToken(accessToken)
-//                .refreshToken(refreshToken)
-//                .user(userMapper.toDto(user))
-//                .expiresIn(jwtProperties.getAccessTokenExpiration())
-//                .build();
-//    }
+
+
 
     @Transactional
     public void activateAccount(String token) {

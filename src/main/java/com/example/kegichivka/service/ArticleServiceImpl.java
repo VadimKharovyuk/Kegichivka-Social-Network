@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 @Slf4j
@@ -40,18 +41,55 @@ public class ArticleServiceImpl implements ArticleService {
         this.imgurService = imgurService;
     }
 
-    public ArticleDto createArticle(CreateArticleRequest request, Admin author) {
-        log.debug("Creating article with author: {}", author); // добавляем логирование
-        if (author == null) {
-            throw new IllegalArgumentException("Author cannot be null");
+    public ArticleDto createArticle(CreateArticleRequest request, Admin admin) {
+        try {
+            Article article = articleMapper.toEntity(request);
+            article.setAuthor(admin);
+
+            // Инициализируем список, если он null
+            if (article.getPhotoUrls() == null) {
+                article.setPhotoUrls(new ArrayList<>());
+            }
+
+            // Добавляем URLs фотографий
+            if (request.getPhotoUrls() != null) {
+                article.getPhotoUrls().addAll(request.getPhotoUrls());
+            }
+
+            Article savedArticle = articleRepository.save(article);
+            log.info("Created article with id: {} by admin: {}", savedArticle.getId(), admin.getEmail());
+
+            return articleMapper.toDto(savedArticle);
+        } catch (Exception e) {
+            log.error("Error creating article", e);
+            throw new RuntimeException("Failed to create article", e);
         }
+    }
 
-        Article article = articleMapper.toEntity(request);
-        article.setAuthor(author);
+    public ArticleDto addPhotosToArticle(Long articleId, List<byte[]> imagesData, Admin admin) {
+        try {
+            Article article = articleRepository.findById(articleId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Article not found"));
 
-        log.debug("Saving article: {}", article); // добавляем логирование
-        Article savedArticle = articleRepository.save(article);
-        return articleMapper.toDto(savedArticle);
+            if (!article.getAuthor().getId().equals(admin.getId())) {
+                throw new AccessDeniedException("Not authorized to modify this article");
+            }
+
+            List<String> photoUrls = imgurService.uploadImages(imagesData);
+
+            // Инициализируем список, если он null
+            if (article.getPhotoUrls() == null) {
+                article.setPhotoUrls(new ArrayList<>());
+            }
+
+            article.getPhotoUrls().addAll(photoUrls);
+
+            Article savedArticle = articleRepository.save(article);
+            return articleMapper.toDto(savedArticle);
+        } catch (Exception e) {
+            log.error("Error adding photos to article", e);
+            throw new RuntimeException("Failed to add photos to article", e);
+        }
     }
 
     @Override
@@ -60,7 +98,7 @@ public class ArticleServiceImpl implements ArticleService {
         Article article = articleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Article not found with id: " + id));
 
-        articleMapper.updateArticleFromDto(request, article);
+//        articleMapper.updateArticleFromDto(request, article);
         Article updatedArticle = articleRepository.save(article);
         return articleMapper.toDto(updatedArticle);
     }
@@ -152,25 +190,12 @@ public class ArticleServiceImpl implements ArticleService {
             throw new RuntimeException("Failed to upload image to Imgur");
         }
 
+        // Добавление фото в список photoUrls
         article.getPhotoUrls().add(photoUrl);
+
+        // Сохраняем статью с фотографиями
         Article updatedArticle = articleRepository.save(article);
-        return articleMapper.toDto(updatedArticle);
-    }
 
-    @Override
-    @Transactional
-    public ArticleDto addPhotosToArticle(Long articleId, List<byte[]> imagesData, Admin admin) throws AccessDeniedException {
-        Article article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Article not found with id: " + articleId));
-
-        if (!article.getAuthor().getId().equals(admin.getId())) {
-            throw new AccessDeniedException("You don't have permission to add photos to this article");
-        }
-
-        List<String> photoUrls = imgurService.uploadImages(imagesData);
-        article.getPhotoUrls().addAll(photoUrls);
-
-        Article updatedArticle = articleRepository.save(article);
         return articleMapper.toDto(updatedArticle);
     }
 
@@ -184,7 +209,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new AccessDeniedException("You don't have permission to remove photos from this article");
         }
 
-        article.getPhotoUrls().remove(photoUrl);
+//        article.getPhotoUrls().remove(photoUrl);
         Article updatedArticle = articleRepository.save(article);
         return articleMapper.toDto(updatedArticle);
     }
