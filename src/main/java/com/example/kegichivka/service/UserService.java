@@ -82,10 +82,12 @@ package com.example.kegichivka.service;//package com.example.kegichivka.service;
 //}
 
 import com.example.kegichivka.exception.UsernameNotFoundException;
+import com.example.kegichivka.model.RegularUser;
 import com.example.kegichivka.repositoty.AdminRepository;
 import com.example.kegichivka.repositoty.BusinessUserRepository;
 import com.example.kegichivka.repositoty.RegularUserRepository;
 import com.example.kegichivka.service.UserPrincipal;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -113,5 +115,9 @@ public class UserService implements UserDetailsService {
                                                 )
                                 )
                 );
+    }
+    public RegularUser getRegularUserById(Long userId) {
+        return regularUserRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
     }
 }

@@ -1,16 +1,340 @@
 <!-- user/dashboard.html -->
+
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Личный кабинет</title>
+    <title>User Dashboard</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --card-background: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard-header {
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .resume-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .resume-card {
+            background: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .resume-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .resume-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+        }
+
+        .resume-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resume-content {
+            padding: 20px;
+        }
+
+        .resume-details {
+            margin-bottom: 20px;
+        }
+
+        .resume-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .status-badge.visible {
+            background-color: var(--success-color);
+        }
+
+        .status-badge.hidden {
+            background-color: var(--warning-color);
+        }
+
+        .resume-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            flex: 1;
+        }
+
+        .button.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .button.primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .button.secondary {
+            background: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .button.secondary:hover {
+            background: var(--border-color);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin: 30px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-actions {
+                flex-direction: column;
+            }
+
+            .dashboard-container {
+                padding: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Личный кабинет пользователя</h1>
-<div th:if="${user != null}">
-    <p>Добро пожаловать, <span th:text="${user.firstName}">!</span></p>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div class="user-info">
+            <div class="user-avatar">
+                <span th:text="${#strings.substring(user.firstName, 0, 1)}">U</span>
+            </div>
+            <div class="user-details">
+                <h1 th:text="${user.firstName + ' ' + user.lastName}">User Name</h1>
+                <p th:text="${user.email}">user@email.com</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <span class="material-icons">description</span>
+            <h3>Total Resumes</h3>
+            <div class="value" th:text="${#lists.size(resumes)}">0</div>
+        </div>
+        <div class="stat-card">
+            <span class="material-icons">visibility</span>
+            <h3>Active Resumes</h3>
+            <div class="value" th:text="${#lists.size(resumes.?[visible])}">0</div>
+        </div>
+        <div class="stat-card">
+            <span class="material-icons">update</span>
+            <h3>Last Updated</h3>
+            <div class="value">Today</div>
+        </div>
+    </div>
+
+    <h2 class="section-title">
+        <span class="material-icons">work</span>
+        My Resumes
+    </h2>
+
+    <div th:if="${#lists.isEmpty(resumes)}" class="empty-state">
+        <span class="material-icons" style="font-size: 48px; margin-bottom: 16px;">add_circle</span>
+        <p>You haven't created any resumes yet</p>
+        <a th:href="@{/resumes/create}" class="button primary">
+            <span class="material-icons">add</span>
+            Create Resume
+        </a>
+    </div>
+
+    <div class="resume-grid">
+        <div th:each="resume : ${resumes}" class="resume-card">
+            <div class="resume-header">
+                <h3>
+                    <span class="material-icons">work</span>
+                    <span th:text="${resume.position}">Position</span>
+                </h3>
+            </div>
+
+            <div class="resume-content">
+                <div th:if="${resume.visible}" class="status-badge visible">
+                    <span class="material-icons">visibility</span>
+                    Visible to employers
+                </div>
+                <div th:unless="${resume.visible}" class="status-badge hidden">
+                    <span class="material-icons">visibility_off</span>
+                    Hidden
+                </div>
+
+                <div class="resume-details">
+                    <div th:if="${resume.languages}" class="resume-detail-item">
+                        <span class="material-icons">translate</span>
+                        <span th:text="${resume.languages}">Languages</span>
+                    </div>
+                    <div class="resume-detail-item">
+                        <span class="material-icons">attach_money</span>
+                        <span th:text="${resume.desiredSalary}">Salary</span>
+                    </div>
+                    <div class="resume-detail-item">
+                        <span class="material-icons">home</span>
+                        <span th:text="${resume.remoteWork ? 'Remote Available' : 'Office Only'}">Work Type</span>
+                    </div>
+                </div>
+
+                <div class="resume-actions">
+                    <a th:href="@{/resumes/{id}(id=${resume.id})}" class="button primary">
+                        <span class="material-icons">visibility</span>
+                        View
+                    </a>
+                    <a th:href="@{/resumes/{id}/edit(id=${resume.id})}" class="button secondary">
+                        <span class="material-icons">edit</span>
+                        Edit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<form th:action="@{/auth/logout}" method="post">
-    <button type="submit">Выйти</button>
-</form>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Личный кабинет</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Личный кабинет пользователя</h1>-->
+<!--<div th:if="${user != null}">-->
+<!--    <p>Добро пожаловать, <span th:text="${user.getFirstName()}">!</span></p>-->
+<!--</div>-->
+<!--<form th:action="@{/auth/logout}" method="post">-->
+<!--    <button type="submit">Выйти</button>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->

@@ -1,4 +1,4 @@
-package com.example.kegichivka.service;
+package com.example.kegichivka.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

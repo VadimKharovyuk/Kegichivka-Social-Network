@@ -21,7 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -30,55 +29,51 @@ public class SecurityConfig {
                         // Публичные эндпоинты
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("admins/**").permitAll()
+                        .requestMatchers("/admins/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/articles/create").permitAll()
-                        .requestMatchers("/articles//").permitAll()
+                        .requestMatchers("/articles/**").permitAll()
                         // Статические ресурсы
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         // Swagger UI
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         // Защищенные эндпоинты
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/business/**").permitAll()
+                        .requestMatchers("/resumes/create").authenticated()
+                        .requestMatchers("/resumes/*/edit").authenticated()
+                        .requestMatchers("/resumes/*/delete").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/admins/register", "/admins/verify",
-                                "/admins/verification-sent", "/admins/resend-verification").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .authenticationProvider(authenticationProvider)  // Добавляем провайдер здесь
+                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
-                            response.setContentType("application/json");
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \""
-                                    + authException.getMessage() + "\"}");
+                            if (request.getRequestURI().startsWith("/api/")) {
+                                // Для API запросов возвращаем JSON
+                                response.setContentType("application/json");
+                                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                response.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \""
+                                        + authException.getMessage() + "\"}");
+                            } else {
+                                // Для веб-запросов перенаправляем на страницу логина
+                                response.sendRedirect("/auth/login");
+                            }
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setContentType("application/json");
-                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                            response.getWriter().write("{\"error\": \"Forbidden\", \"message\": \""
-                                    + accessDeniedException.getMessage() + "\"}");
+                            if (request.getRequestURI().startsWith("/api/")) {
+                                response.setContentType("application/json");
+                                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                                response.getWriter().write("{\"error\": \"Forbidden\", \"message\": \""
+                                        + accessDeniedException.getMessage() + "\"}");
+                            } else {
+                                response.sendRedirect("/error/403");
+                            }
                         })
                 );
 
         return http.build();
     }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//        authProvider.setUserDetailsService(userDetailsService);
-//        authProvider.setPasswordEncoder(passwordEncoder());
-//        return authProvider;
-//    }
+
 }

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>View Resume</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+    <link rel="stylesheet" th:href="@{/css/footer.css}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --background-color: #f8fafc;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+            --card-background: #ffffff;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .resume-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-block {
+            background: var(--background-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            list-style: none;
+            padding: 0;
+        }
+
+        .skills-list li {
+            background: var(--card-background);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .experience-card, .education-card {
+            background: var(--background-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .date-range {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .button.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .button.primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .button.secondary {
+            background: var(--card-background);
+            color: var(--text-color);
+        }
+
+        .button.secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .status-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .status-label.remote {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .material-icons {
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .resume-container {
+                padding: 15px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="resume-container">
+    <h1>
+        <span class="material-icons">description</span>
+        Resume Details
+    </h1>
+
+    <div th:if="${resume != null}">
+        <div class="section">
+            <h2>
+                <span class="material-icons">work</span>
+                Position
+            </h2>
+            <div class="content-block">
+                <p th:text="${resume.position}"></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="material-icons">translate</span>
+                Languages
+            </h2>
+            <div class="content-block">
+                <p th:text="${resume.languages}"></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="material-icons">home_work</span>
+                Work Preference
+            </h2>
+            <div class="content-block">
+                    <span class="status-label remote" th:if="${resume.remoteWork}">
+                        <span class="material-icons">wifi</span>
+                        Remote Work Available
+                    </span>
+                <span class="status-label" th:unless="${resume.remoteWork}">
+                        <span class="material-icons">location_on</span>
+                        Office Only
+                    </span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="material-icons">attach_money</span>
+                Desired Salary
+            </h2>
+            <div class="content-block">
+                <p th:text="${resume.desiredSalary}"></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="material-icons">psychology</span>
+                Skills
+            </h2>
+            <ul class="skills-list">
+                <li th:each="skill : ${resume.skills}">
+                    <span class="material-icons">star</span>
+                    <span th:text="${skill}"></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="material-icons">business_center</span>
+                Work Experience
+            </h2>
+            <div th:each="experience : ${resume.workExperience}" class="experience-card">
+                <h3 th:text="${experience.company}"></h3>
+                <p th:text="${experience.position}"></p>
+                <p class="date-range">
+                    <span class="material-icons">date_range</span>
+                    <span th:text="${#temporals.format(experience.startDate, 'dd-MM-yyyy')} + ' - ' +
+                                     ${experience.endDate != null ? #temporals.format(experience.endDate, 'dd-MM-yyyy') : 'Present'}">
+                        </span>
+                </p>
+                <p th:text="${experience.description}"></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="material-icons">school</span>
+                Education
+            </h2>
+            <div th:each="education : ${resume.educationHistory}" class="education-card">
+                <h3 th:text="${education.institution}"></h3>
+                <p th:text="${education.degree} + ' in ' + ${education.fieldOfStudy}"></p>
+                <p class="date-range">
+                    <span class="material-icons">date_range</span>
+                    <span th:text="${#temporals.format(education.startDate, 'dd-MM-yyyy')} + ' - ' +
+                                     ${education.endDate != null ? #temporals.format(education.endDate, 'dd-MM-yyyy') : 'Present'}">
+                        </span>
+                </p>
+                <p th:text="${education.description}"></p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>
+                <span class="material-icons">person</span>
+                About Me
+            </h2>
+            <div class="content-block">
+                <p th:text="${resume.aboutMe}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${resume == null}" class="content-block">
+        <p>Resume not found.</p>
+    </div>
+
+    <div class="actions">
+        <a th:href="@{/resumes/create}" class="button primary">
+            <span class="material-icons">add</span>
+            Create New Resume
+        </a>
+        <a th:href="@{/}" class="button secondary">
+            <span class="material-icons">arrow_back</span>
+            Back to Home
+        </a>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
