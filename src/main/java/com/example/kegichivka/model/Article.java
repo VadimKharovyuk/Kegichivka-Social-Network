@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +34,18 @@ public class Article extends BaseContent {
     @ElementCollection
     private Set<String> tags = new HashSet<>();
 
-//краткое содержание
+    //краткое содержание
     @Column(length = 500)
     private String summary;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Override
+    protected void onCreate() {
+        super.onCreate();
+        createdAt = LocalDateTime.now();
+    }
+
+
 }

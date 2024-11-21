@@ -20,4 +20,5 @@ public class ArticleDto extends BaseContentDto {
     private String summary;
     private Set<String> tags = new HashSet<>(); // Добавляем поле tags
     private List<String> photoUrls = new ArrayList<>();
+
 }

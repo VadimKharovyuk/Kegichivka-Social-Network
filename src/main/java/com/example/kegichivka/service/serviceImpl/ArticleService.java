@@ -31,4 +31,6 @@ public interface ArticleService {
     ArticleDto addPhotosToArticle(Long articleId, List<byte[]> imagesData, Admin admin) throws AccessDeniedException;
 
     ArticleDto removePhotoFromArticle(Long articleId, String photoUrl, Admin admin) throws AccessDeniedException;
+
+    ArticleDto getLatestArticle();
 }

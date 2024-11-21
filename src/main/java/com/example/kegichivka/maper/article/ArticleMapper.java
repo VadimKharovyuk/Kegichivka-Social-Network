@@ -27,6 +27,7 @@ public interface ArticleMapper {
     @Mapping(target = "summary", source = "summary")
     @Mapping(target = "tags", source = "tags")
     @Mapping(target = "photoUrls", source = "photoUrls")
+
     ArticleDto toDto(Article article);
 
     @Mapping(target = "id", ignore = true)

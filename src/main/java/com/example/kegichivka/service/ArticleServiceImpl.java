@@ -11,6 +11,7 @@ import com.example.kegichivka.model.Admin;
 import com.example.kegichivka.model.Article;
 import com.example.kegichivka.repositoty.ArticleRepository;
 import com.example.kegichivka.service.serviceImpl.ArticleService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Named;
@@ -212,5 +213,12 @@ public class ArticleServiceImpl implements ArticleService {
 //        article.getPhotoUrls().remove(photoUrl);
         Article updatedArticle = articleRepository.save(article);
         return articleMapper.toDto(updatedArticle);
+    }
+
+    @Override
+    public ArticleDto getLatestArticle() {
+        Article article = articleRepository.findFirstByOrderByPublishedAtDesc()
+                .orElseThrow(() -> new EntityNotFoundException("No articles found"));
+        return articleMapper.toDto(article);
     }
 }

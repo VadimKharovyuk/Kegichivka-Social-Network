@@ -474,26 +474,25 @@
                 <a href="/articles" class="view-all">Все статьи <i class="fas fa-arrow-right"></i></a>
             </div>
             <div class="articles-grid">
-                <article class="article-card">
+                <article class="article-card" th:if="${latestArticle != null}">
                     <div class="article-image">
-                        <img src="/images/productivity.jpg" alt="Продуктивность">
-                        <span class="reading-time">7 мин чтения</span>
+                        <img th:if="${!latestArticle.photoUrls.empty}"
+                             th:src="${latestArticle.photoUrls[0]}"
+                             th:alt="${latestArticle.title}">
+                        <img th:if="${latestArticle.photoUrls.empty}"
+                             src="/images/default-article.jpg"
+                             alt="Default Image">
                     </div>
                     <div class="article-content">
-                        <div class="article-category">Аналитика</div>
-                        <h3 class="article-title">57% украинцев теряют продуктивность на работе</h3>
-                        <p class="article-excerpt">Исследование показало, что большинство работников испытывают проблемы с концентрацией...</p>
-                        <div class="article-meta">
-                            <div class="author">
-                                <img src="/images/author1.jpg" alt="Автор" class="author-avatar">
-                                <span class="author-name">Евгения Кузнецова</span>
-                            </div>
-                            <div class="article-stats">
-                                <span><i class="far fa-heart"></i> 6</span>
-                                <span><i class="far fa-comment"></i> 2</span>
-                                <span><i class="far fa-eye"></i> 413</span>
-                            </div>
+                        <div class="article-tags" th:if="${!latestArticle.tags.empty}">
+                            <span class="tag" th:each="tag : ${latestArticle.tags}" th:text="${tag}">Tag</span>
                         </div>
+                        <h3 class="article-title" th:text="${latestArticle.title}">
+                            Заголовок статьи
+                        </h3>
+                        <p class="article-summary" th:text="${latestArticle.summary}">
+                            Краткое описание...
+                        </p>
                     </div>
                 </article>
                 <!-- Повторить для других статей -->
