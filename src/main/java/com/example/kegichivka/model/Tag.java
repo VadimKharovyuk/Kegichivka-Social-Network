@@ -22,4 +22,6 @@ public class Tag {
 
     @ManyToMany(mappedBy = "tags")
     private Set<JobListing> jobListings = new HashSet<>();
+
+
 }

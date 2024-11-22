@@ -35,34 +35,13 @@ public abstract class BaseListing {
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
-    private boolean isActive = true;
+    private boolean active = true;
 
     @Enumerated(EnumType.STRING)
     private ListingStatus status = ListingStatus.PENDING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_user_id", nullable = false)
-    private BusinessUser businessUser;
-
     @Version
     private Long version;
-
-    @Embedded
-    private Location location;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @Column
-    private String metroStation;
-
-    @Column
-    private String district;
-
-    @ElementCollection
-    @CollectionTable(name = "listing_photos")
-    private List<String> photoUrls = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

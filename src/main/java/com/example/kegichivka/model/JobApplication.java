@@ -17,23 +17,27 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class JobApplication {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private RegularUser applicant;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_listing_id", nullable = false)
     private JobListing jobListing;
 
-    @ManyToOne
-    private Resume resume;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "applicant_id", nullable = false)
+    private RegularUser applicant;
 
     @Column(length = 2000)
     private String coverLetter;
 
     @Enumerated(EnumType.STRING)
-    private ApplicationStatus status;
+    private ApplicationStatus status = ApplicationStatus.PENDING;
 
     private LocalDateTime appliedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        appliedAt = LocalDateTime.now();
+    }
 }

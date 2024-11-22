@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Job Listings</title>
+</head>
+<body>
+<h1>Job Listings</h1>
+
+<!-- Search form -->
+<form th:action="@{/jobs}" method="get">
+  <input type="text" name="keyword" th:value="${keyword}" placeholder="Search jobs...">
+  <button type="submit">Search</button>
+</form>
+
+<!-- Create job button for business users -->
+<div th:if="${#authorization.expression('hasRole(''BUSINESS_USER'')')}">
+  <a th:href="@{/jobs/create}">Post New Job</a>
+</div>
+
+<!-- Job listings -->
+<div th:if="${jobs.empty}">
+  <p>No jobs found.</p>
+</div>
+
+<div th:each="job : ${jobs}">
+  <div>
+    <h2>
+      <a th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">Job Title</a>
+    </h2>
+    <p>
+      <span th:text="${job.company.name}">Company Name</span> •
+      <span th:text="${job.location.city}">Location</span> •
+      <span th:text="${job.employmentType}">Employment Type</span>
+    </p>
+    <p th:text="${job.salary}">Salary</p>
+    <p>Posted: <span th:text="${#temporals.format(job.createdAt, 'dd MMM yyyy')}">Date</span></p>
+  </div>
+</div>
+
+<!-- Pagination -->
+<div th:if="${jobs.totalPages > 1}">
+        <span th:each="i : ${#numbers.sequence(0, jobs.totalPages - 1)}">
+            <a th:href="@{/jobs(page=${i}, keyword=${keyword})}"
+               th:text="${i + 1}"
+               th:class="${jobs.number == i} ? 'active' : ''">
+            </a>
+        </span>
+</div>
+</body>
+</html>

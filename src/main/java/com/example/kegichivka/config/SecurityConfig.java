@@ -40,6 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/resumes/create").authenticated()
                         .requestMatchers("/resumes/*/edit").authenticated()
                         .requestMatchers("/resumes/*/delete").authenticated()
+                        .requestMatchers("/jobs/**").authenticated()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

@@ -5,12 +5,11 @@ import lombok.Getter;
 @Getter
 public enum ApplicationStatus {
     PENDING("На рассмотрении"),
-    REVIEWED("Просмотрено"),
-    SHORTLISTED("В шортлисте"),
-    INTERVIEW("Приглашен на интервью"),
-    OFFER_SENT("Отправлено предложение"),
-    ACCEPTED("Принят"),
-    REJECTED("Отклонено");
+    REVIEWING("В процессе проверки"),
+    INTERVIEW_SCHEDULED("Собеседование назначено"),
+    ACCEPTED("Заявка принята"),
+    REJECTED("Заявка отклонена"),
+    WITHDRAWN("Заявка отозвана");
 
     private final String displayName;
 

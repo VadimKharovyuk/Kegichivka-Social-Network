@@ -9,7 +9,8 @@ public enum ListingStatus {
     PAUSED("Приостановлено"),
     EXPIRED("Истекло"),
     ARCHIVED("В архиве"),
-    REJECTED("Отклонено");
+    REJECTED("Отклонено"),
+    APPROVED("ОДОБРЕННЫЙ");
 
     private final String displayName;
 

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${job.title}">Job Details</title>
+</head>
+<body>
+<div>
+    <a th:href="@{/jobs}">Back to Jobs</a>
+
+    <div th:if="${#authorization.expression('hasRole(''BUSINESS_USER'')')
+                     and #authentication.principal.id == job.businessUser.id}">
+        <a th:href="@{/jobs/{id}/edit(id=${job.id})}">Edit</a>
+        <form th:action="@{/jobs/{id}/delete(id=${job.id})}" method="post" style="display: inline;">
+            <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+        </form>
+    </div>
+</div>
+
+<h1 th:text="${job.title}">Job Title</h1>
+
+<div>
+    <h2>Company Information</h2>
+    <p th:text="${job.company.name}">Company Name</p>
+    <p th:if="${job.company.isVerified}">✓ Verified Company</p>
+</div>
+
+<div>
+    <h2>Job Details</h2>
+    <p><strong>Salary:</strong> <span th:text="${job.salary}"></span></p>
+    <p><strong>Location:</strong>
+        <span th:text="${job.location.city + ', ' + job.location.country}"></span>
+        <span th:if="${job.isRemote}"> (Remote Available)</span>
+    </p>
+    <p><strong>Employment Type:</strong> <span th:text="${job.employmentType}"></span></p>
+    <p><strong>Experience Level:</strong> <span th:text="${job.requiredExperience.displayName}"></span></p>
+    <p><strong>Posted:</strong>
+        <span th:text="${#temporals.format(job.createdAt, 'dd MMM yyyy')}"></span>
+    </p>
+</div>
+
+<div>
+    <h2>Description</h2>
+    <div th:utext="${job.description}"></div>
+</div>
+
+<div>
+    <h2>Requirements</h2>
+    <div th:utext="${job.requirements}"></div>
+</div>
+
+<div th:if="${job.benefits}">
+    <h2>Benefits</h2>
+    <div th:utext="${job.benefits}"></div>
+</div>
+
+<div th:if="${!#lists.isEmpty(job.requiredSkills)}">
+    <h2>Required Skills</h2>
+    <ul>
+        <li th:each="skill : ${job.requiredSkills}" th:text="${skill}"></li>
+    </ul>
+</div>
+
+<!-- Apply button for regular users -->
+<div th:if="${#authorization.expression('hasRole(''REGULAR_USER'')')}">
+    <form th:action="@{/applications/create}" method="post">
+        <input type="hidden" name="jobId" th:value="${job.id}">
+        <button type="submit">Apply Now</button>
+    </form>
+</div>
+</body>
+</html>

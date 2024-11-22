@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Job Listing</title>
+</head>
+<body>
+<h1>Edit Job Listing</h1>
+
+<form th:action="@{/jobs/{id}/edit(id=${jobDto.id})}" th:object="${jobDto}" method="post">
+    <div>
+        <label>Title:</label>
+        <input type="text" th:field="*{title}" required>
+        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+    </div>
+
+    <div>
+        <label>Description:</label>
+        <textarea th:field="*{description}" required></textarea>
+        <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+    </div>
+
+    <div>
+        <label>Salary:</label>
+        <input type="number" th:field="*{salary}" required>
+        <span th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></span>
+    </div>
+
+    <div>
+        <label>Position:</label>
+        <input type="text" th:field="*{position}" required>
+    </div>
+
+    <div>
+        <label>Category:</label>
+        <select th:field="*{categoryId}" required>
+            <option value="">Select Category</option>
+            <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Employment Type:</label>
+        <select th:field="*{employmentType}" required>
+            <option th:each="type : ${T(com.example.kegichivka.enums.EmploymentType).values()}"
+                    th:value="${type}"
+                    th:text="${type}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Experience Level:</label>
+        <select th:field="*{requiredExperience}" required>
+            <option th:each="level : ${T(com.example.kegichivka.enums.ExperienceLevel).values()}"
+                    th:value="${level}"
+                    th:text="${level.displayName}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label>Location:</label>
+        <input type="text" th:field="*{location.city}" placeholder="City" required>
+        <input type="text" th:field="*{location.country}" placeholder="Country" required>
+    </div>
+
+    <div>
+        <label>Remote Work:</label>
+        <input type="checkbox" th:field="*{isRemote}">
+    </div>
+
+    <button type="submit">Update Job</button>
+    <a th:href="@{/jobs/{id}(id=${jobDto.id})}">Cancel</a>
+</form>
+</body>
+</html>
