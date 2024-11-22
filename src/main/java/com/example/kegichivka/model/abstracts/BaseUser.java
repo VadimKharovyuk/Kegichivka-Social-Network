@@ -3,6 +3,7 @@ package com.example.kegichivka.model.abstracts;
 import com.example.kegichivka.enums.AccountStatus;
 import com.example.kegichivka.enums.UserRole;
 import com.example.kegichivka.enums.VerificationStatus;
+import com.example.kegichivka.model.Notification;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

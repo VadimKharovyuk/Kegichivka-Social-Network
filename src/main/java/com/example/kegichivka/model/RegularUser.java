@@ -22,11 +22,18 @@ import java.util.Set;
 public class RegularUser extends BaseUser {
 
 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notification> notifications = new ArrayList<>();
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Resume> resumes = new ArrayList<>();
     //предпочтения
     @ElementCollection
     private Set<String> preferences = new HashSet<>();
+
+
+
 
 
     @Column

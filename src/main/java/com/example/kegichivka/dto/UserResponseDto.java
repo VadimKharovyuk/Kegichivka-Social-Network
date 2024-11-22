@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,4 +22,5 @@ public class UserResponseDto {
     private String profilePhotoUrl;
     private UserRole role;
     private AccountStatus accountStatus;
+    private List<NotificationDto> notifications;
 }
