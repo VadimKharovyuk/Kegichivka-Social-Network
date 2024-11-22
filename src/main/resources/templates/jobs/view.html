@@ -12,30 +12,28 @@
     <h1 th:text="${job.title}">Job Title</h1>
 
 
+
+
     <div class="job-actions">
-        <!-- Для REGULAR_USER показываем кнопку Apply -->
-        <div th:if="${currentUserRole == T(com.example.kegichivka.enums.UserRole).REGULAR_USER}">
-            <div th:if="${canApply}">
-                <form th:action="@{/jobs/{id}/apply(id=${job.id})}" method="post">
-                    <button type="submit" class="apply-button">Apply Now</button>
-                </form>
-            </div>
-            <div th:unless="${canApply}" class="already-applied">
-                You have already applied for this position
+        <!-- Единая логика для кнопки Apply -->
+        <div th:if="${currentUserRole != null}">
+            <div th:if="${currentUserRole.name() == 'REGULAR_USER'}">
+                <div th:if="${canApply}">
+                    <form th:action="@{/jobs/{id}/apply(id=${job.id})}" method="post">
+                        <button type="submit" class="apply-button">Apply Now</button>
+                    </form>
+                </div>
+                <div th:unless="${canApply}" class="already-applied">
+                    You have already applied for this position
+                </div>
             </div>
         </div>
 
-        <!-- Для BUSINESS_USER показываем кнопки редактирования -->
-        <div th:if="${currentUserRole == T(com.example.kegichivka.enums.UserRole).BUSINESS_USER
-                  && job.businessUser != null
-                  && job.businessUser.id == currentUserId}">
-            <a th:href="@{/jobs/{id}/edit(id=${job.id})}" class="edit-button">Edit</a>
-            <form th:action="@{/jobs/{id}/delete(id=${job.id})}" method="post"
-                  onsubmit="return confirm('Are you sure you want to delete this job listing?');">
-                <button type="submit" class="delete-button">Delete</button>
-            </form>
+        <div th:if="${currentUserRole == null}">
+            <a th:href="@{/auth/login}" class="btn">Войдите, чтобы откликнуться</a>
         </div>
     </div>
+
 
 
     <div class="job-header">
@@ -104,15 +102,6 @@
             </form>
         </div>
 
-        <!-- Опции редактирования для владельца вакансии -->
-        <div th:if="${#authentication.principal.id == job.businessUser.id}">
-            <a th:href="@{/jobs/{id}/edit(id=${job.id})}" class="edit-button">Edit</a>
-            <form th:action="@{/jobs/{id}/delete(id=${job.id})}" method="post"
-                  onsubmit="return confirm('Are you sure you want to delete this job listing?');">
-                <button type="submit" class="delete-button">Delete</button>
-            </form>
-        </div>
-    </div>
 
     <!-- Статистика просмотров -->
     <div class="stats" th:if="${job.viewsCount != null}">

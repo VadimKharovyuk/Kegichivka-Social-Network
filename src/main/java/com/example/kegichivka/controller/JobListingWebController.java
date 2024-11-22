@@ -14,6 +14,7 @@ import com.example.kegichivka.service.BusinessUserService;
 import com.example.kegichivka.service.JobListingService;
 import com.example.kegichivka.service.UserPrincipal;
 import com.example.kegichivka.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,20 +122,39 @@ public class JobListingWebController {
     }
 
     @GetMapping("/{id}")
-    public String viewJob(@PathVariable Long id, Model model, @AuthenticationPrincipal UserPrincipal currentUser) {
-        JobListingResponseDto job = jobListingService.getJobById(id);
-        model.addAttribute("job", job);
-        model.addAttribute("currentUserId", currentUser.getId());
-        model.addAttribute("currentUserRole", currentUser.getRole());
+    public String viewJob(@PathVariable Long id,
+                          Model model,
+                          @AuthenticationPrincipal UserPrincipal currentUser) {
+        try {
+            // Получаем информацию о вакансии
+            JobListingResponseDto job = jobListingService.getJobById(id);
+            model.addAttribute("job", job);
 
-        if (currentUser.getRole() == UserRole.REGULAR_USER) {
-            JobListing jobListing = jobListingService.findJobListingById(id);
-            RegularUser regularUser = userService.getRegularUserById(currentUser.getId());
-            boolean canApply = jobListingService.canApply(regularUser, jobListing);
-            model.addAttribute("canApply", canApply);
+            // Проверяем аутентификацию пользователя
+            if (currentUser != null) {
+                model.addAttribute("currentUserId", currentUser.getId());
+                model.addAttribute("currentUserRole", currentUser.getRole());
+
+                // Проверяем возможность подачи заявки только для обычных пользователей
+                if (currentUser.getRole() == UserRole.REGULAR_USER) {
+                    JobListing jobListing = jobListingService.findJobListingById(id);
+                    RegularUser regularUser = userService.getRegularUserById(currentUser.getId());
+                    boolean canApply = jobListingService.canApply(regularUser, jobListing);
+                    model.addAttribute("canApply", canApply);
+                }
+            } else {
+                // Для неаутентифицированных пользователей
+                model.addAttribute("currentUserRole", null);
+                model.addAttribute("canApply", false);
+            }
+
+            return "jobs/view";
+
+        } catch (EntityNotFoundException e) {
+            // Обработка случая, когда вакансия не найдена
+            model.addAttribute("errorMessage", "Job listing not found");
+            return "redirect:/jobs";
         }
-
-        return "jobs/view";
     }
 
     @GetMapping("/{id}/edit")
@@ -210,5 +230,32 @@ public class JobListingWebController {
         redirectAttributes.addFlashAttribute("errorMessage", "У вас нет прав для выполнения этого действия");
         return "redirect:/jobs";
     }
+
+//    @PostMapping("/{id}/apply")
+//    @PreAuthorize("hasRole('REGULAR_USER')")
+//    public String applyForJob(@PathVariable Long id,
+//                              @AuthenticationPrincipal UserPrincipal currentUser,
+//                              RedirectAttributes redirectAttributes) {
+//        try {
+//            JobListing jobListing = jobListingService.findJobListingById(id);
+//            RegularUser regularUser = userService.getRegularUserById(currentUser.getId());
+//
+//            if (jobListingService.canApply(regularUser, jobListing)) {
+//                jobListingService.applyForJob(regularUser, jobListing);
+//                redirectAttributes.addFlashAttribute("successMessage",
+//                        "Your application has been submitted successfully!");
+//            } else {
+//                redirectAttributes.addFlashAttribute("errorMessage",
+//                        "You have already applied for this position");
+//            }
+//
+//            return "redirect:/jobs/" + id;
+//
+//        } catch (EntityNotFoundException e) {
+//            redirectAttributes.addFlashAttribute("errorMessage",
+//                    "Unable to process your application. Please try again.");
+//            return "redirect:/jobs/" + id;
+//        }
+//    }
 
 }

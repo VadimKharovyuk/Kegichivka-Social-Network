@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/admins/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/jobs/**").permitAll()
+
                         .requestMatchers("/articles/**").permitAll()
                         .requestMatchers("/categories/**").permitAll()
                         // Статические ресурсы
@@ -45,7 +46,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/jobs/create").hasRole("BUSINESS_USER")
+
                         .anyRequest().authenticated()
+
                 )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
