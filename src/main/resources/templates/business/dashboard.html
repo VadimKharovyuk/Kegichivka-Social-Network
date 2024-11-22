@@ -1,16 +1,300 @@
-<!-- business/dashboard.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Панель управления бизнеса</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #f5f5f5;
+    }
+
+    .header {
+      background-color: #fff;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+
+    .welcome-message {
+      font-size: 1.2rem;
+    }
+
+    .welcome-message h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .logout-btn {
+      padding: 0.5rem 1rem;
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logout-btn:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+    }
+
+    .dashboard-container {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: 1rem;
+      }
+    }
+
+    .section {
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-5px);
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(to right, #007bff, #00c6ff);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      color: #333;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-content {
+      margin-bottom: 1rem;
+      color: #666;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat-item {
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stat-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #007bff;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-<h1>Панель управления бизнеса</h1>
-<div th:if="${user != null}">
-  <p>Добро пожаловать, <span th:text="${user.companyName}">!</span></p>
-</div>
-<form th:action="@{/auth/logout}" method="post">
-  <button type="submit">Выйти</button>
-</form>
+<header class="header">
+  <div class="welcome-message">
+    <h1><i class="fas fa-tachometer-alt"></i> Панель управления бизнеса</h1>
+    <p><i class="fas fa-user"></i> <span th:text="${user.firstName + ' ' + user.lastName}">!</span></p>
+    <p><i class="fas fa-envelope"></i> <span th:text="${user.getEmail()}">!</span></p>
+  </div>
+  <form th:action="@{/auth/logout}" method="post">
+    <button type="submit" class="logout-btn">
+      <i class="fas fa-sign-out-alt"></i> Выйти
+    </button>
+  </form>
+</header>
+
+<main class="dashboard-container">
+  <!-- Секция управления вакансиями -->
+  <section class="section">
+    <h2 class="section-title"><i class="fas fa-briefcase"></i> Управление вакансиями</h2>
+    <div class="stats">
+      <div class="stat-item">
+<!--        <div class="stat-value" th:text="${activeJobsCount ?: 0}">0</div>-->
+        <div class="stat-label"><i class="fas fa-clock"></i> Активные вакансии</div>
+      </div>
+      <div class="stat-item">
+<!--        <div class="stat-value" th:text="${totalApplicationsCount ?: 0}">0</div>-->
+        <div class="stat-label"><i class="fas fa-users"></i> Всего заявок</div>
+      </div>
+    </div>
+    <div class="cards-container">
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-plus-circle"></i> Создать вакансию</h3>
+        <div class="card-content">
+          <p>Разместите новую вакансию для поиска сотрудников</p>
+        </div>
+        <a href="/jobs/create" class="btn"><i class="fas fa-plus"></i> Создать вакансию</a>
+      </div>
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-list"></i> Мои вакансии</h3>
+        <div class="card-content">
+          <p>Управляйте своими активными вакансиями</p>
+        </div>
+        <a href="/jobs/my" class="btn"><i class="fas fa-eye"></i> Просмотреть</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Секция заявок -->
+  <section class="section">
+    <h2 class="section-title"><i class="fas fa-file-alt"></i> Заявки кандидатов</h2>
+    <div class="cards-container">
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-inbox"></i> Новые заявки</h3>
+        <div class="card-content">
+          <p>Просмотрите новые заявки от кандидатов</p>
+        </div>
+        <a href="/applications/new" class="btn"><i class="fas fa-envelope-open"></i> Просмотреть заявки</a>
+      </div>
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-archive"></i> Архив заявок</h3>
+        <div class="card-content">
+          <p>История всех заявок</p>
+        </div>
+        <a href="/applications/archive" class="btn"><i class="fas fa-folder-open"></i> Открыть архив</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Секция аналитики -->
+  <section class="section">
+    <h2 class="section-title"><i class="fas fa-chart-line"></i> Аналитика</h2>
+    <div class="cards-container">
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-eye"></i> Статистика просмотров</h3>
+        <div class="card-content">
+          <p>Анализ просмотров ваших вакансий</p>
+        </div>
+        <a href="/analytics/views" class="btn"><i class="fas fa-chart-bar"></i> Просмотреть статистику</a>
+      </div>
+      <div class="card">
+        <h3 class="card-title"><i class="fas fa-file-invoice"></i> Отчеты по заявкам</h3>
+        <div class="card-content">
+          <p>Детальные отчеты по заявкам кандидатов</p>
+        </div>
+        <a href="/analytics/applications" class="btn"><i class="fas fa-file-alt"></i> Открыть отчеты</a>
+      </div>
+    </div>
+  </section>
+</main>
 </body>
 </html>
