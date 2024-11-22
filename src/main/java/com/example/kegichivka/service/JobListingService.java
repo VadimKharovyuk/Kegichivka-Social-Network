@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import jakarta.persistence.criteria.Predicate;
@@ -40,22 +41,41 @@ public class JobListingService {
     private final JobApplicationRepository jobApplicationRepository;
     private final ViewStatisticsRepository viewStatisticsRepository;
 
-    @Transactional
     public JobListingResponseDto createJob(CreateJobListingDto dto, BusinessUser businessUser) {
+        log.info("Starting job creation process");
+
+        if (businessUser == null) {
+            log.error("BusinessUser is null");
+            throw new IllegalArgumentException("BusinessUser cannot be null");
+        }
+
+        log.debug("Creating job listing entity from DTO");
         JobListing jobListing = jobListingMapper.toEntity(dto, businessUser);
-        jobListing.setBusinessUser(businessUser); // Дополнительная гарантия
+        jobListing.setBusinessUser(businessUser);
+
+        LocalDateTime now = LocalDateTime.now();
+        jobListing.setCreatedAt(now);
+        jobListing.setUpdatedAt(now);
+        jobListing.setVersion(0L);
+        jobListing.setActive(true);
 
         if (dto.getCategoryId() != null) {
+            log.debug("Finding category with id: {}", dto.getCategoryId());
             Category category = categoryRepository.findById(dto.getCategoryId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+                    .orElseThrow(() -> {
+                        log.error("Category not found with id: {}", dto.getCategoryId());
+                        return new ResourceNotFoundException("Category not found");
+                    });
             jobListing.setCategory(category);
         }
 
+        log.debug("Saving job listing to database");
         jobListing = jobListingRepository.save(jobListing);
-        businessUser.addJobListing(jobListing); // Поддерживаем двустороннюю связь
+        log.info("Successfully saved job listing with id: {}", jobListing.getId());
 
         return jobListingMapper.toResponseDto(jobListing);
     }
+
     @Transactional(readOnly = true)
     public Page<JobListingShortDto> getJobsByCategory(Category category, Pageable pageable) {
         return jobListingRepository.findByCategoryAndActiveTrue(category, pageable)

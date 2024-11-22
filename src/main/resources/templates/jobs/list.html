@@ -28,9 +28,9 @@
       <a th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">Job Title</a>
     </h2>
     <p>
-      <span th:text="${job.company.name}">Company Name</span> •
-      <span th:text="${job.location.city}">Location</span> •
-      <span th:text="${job.employmentType}">Employment Type</span>
+<!--      <span th:text="${job.company.name}">Company Name</span> •-->
+<!--      <span th:text="${job.location.city}">Location</span> •-->
+<!--      <span th:text="${job.employmentType}">Employment Type</span>-->
     </p>
     <p th:text="${job.salary}">Salary</p>
     <p>Posted: <span th:text="${#temporals.format(job.createdAt, 'dd MMM yyyy')}">Date</span></p>

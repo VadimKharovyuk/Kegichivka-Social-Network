@@ -31,7 +31,9 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admins/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers("/jobs/**").permitAll()
                         .requestMatchers("/articles/**").permitAll()
+                        .requestMatchers("/categories/**").permitAll()
                         // Статические ресурсы
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         // Swagger UI
@@ -40,8 +42,9 @@ public class SecurityConfig {
                         .requestMatchers("/resumes/create").authenticated()
                         .requestMatchers("/resumes/*/edit").authenticated()
                         .requestMatchers("/resumes/*/delete").authenticated()
-                        .requestMatchers("/jobs/**").authenticated()
+
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/jobs/create").hasRole("BUSINESS_USER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->

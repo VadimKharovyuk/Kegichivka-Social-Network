@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Categories</title>
+</head>
+<body>
+<h1>Categories</h1>
+<a href="/categories/create">Create New Category</a>
+
+<div th:fragment="categoryList(categories)">
+    <ul>
+        <li th:each="category : ${categories}">
+            <span th:text="${category.name}"></span>
+            <a th:href="@{/categories/edit/{id}(id=${category.id})}">Edit</a>
+            <a th:href="@{/categories/delete/{id}(id=${category.id})}"
+               onclick="return confirm('Are you sure?')">Delete</a>
+
+            <div th:if="${!category.subCategories.empty}">
+                <div th:replace="this::categoryList(categories=${category.subCategories})">
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

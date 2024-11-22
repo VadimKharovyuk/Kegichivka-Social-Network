@@ -1,5 +1,6 @@
 package com.example.kegichivka.dto;
 
+import com.example.kegichivka.dto.article.BaseUserDto;
 import com.example.kegichivka.enums.EmploymentType;
 import com.example.kegichivka.enums.ExperienceLevel;
 import com.example.kegichivka.enums.ListingStatus;
@@ -45,5 +46,6 @@ public class JobListingResponseDto {
     private CategoryDto category;
     private Long applicationsCount;
     private Long viewsCount;
+    private BaseUserDto businessUser;
 
 }

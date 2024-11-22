@@ -1,20 +1,28 @@
 package com.example.kegichivka.controller;
 
 import com.example.kegichivka.dto.*;
+import com.example.kegichivka.enums.UserRole;
 import com.example.kegichivka.exception.ResourceNotFoundException;
 import com.example.kegichivka.model.BusinessUser;
+import com.example.kegichivka.model.Category;
 import com.example.kegichivka.model.JobListing;
 import com.example.kegichivka.model.RegularUser;
 import com.example.kegichivka.model.abstracts.BaseUser;
+import com.example.kegichivka.repositoty.BusinessUserRepository;
 import com.example.kegichivka.repositoty.CategoryRepository;
+import com.example.kegichivka.service.BusinessUserService;
 import com.example.kegichivka.service.JobListingService;
+import com.example.kegichivka.service.UserPrincipal;
+import com.example.kegichivka.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,13 +34,15 @@ import java.math.BigDecimal;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
-// 1. Web Controller
+@Slf4j
 @Controller
 @RequestMapping("/jobs")
 @RequiredArgsConstructor
 public class JobListingWebController {
     private final JobListingService jobListingService;
     private final CategoryRepository categoryRepository;
+    private final BusinessUserService businessUserService;
+    private final UserService userService;
 
     @GetMapping
     public String listJobs(
@@ -68,29 +78,42 @@ public class JobListingWebController {
         if (!model.containsAttribute("jobDto")) {
             model.addAttribute("jobDto", new CreateJobListingDto());
         }
-        model.addAttribute("categories", categoryRepository.findAll());
+        List<Category> categories = categoryRepository.findAll();
+        model.addAttribute("categories", categories);
         return "jobs/create";
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('BUSINESS_USER')")
     public String createJob(
             @Valid @ModelAttribute("jobDto") CreateJobListingDto jobDto,
             BindingResult result,
-            @AuthenticationPrincipal BusinessUser businessUser,
+            Authentication authentication,
             RedirectAttributes redirectAttributes,
             Model model
     ) {
+        log.info("Attempting to create job listing: {}", jobDto.getTitle());
+
         if (result.hasErrors()) {
+            log.warn("Validation errors: {}", result.getAllErrors());
             model.addAttribute("categories", categoryRepository.findAll());
             return "jobs/create";
         }
 
         try {
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+            log.debug("User principal email: {}", userPrincipal.getEmail());
+
+            BusinessUser businessUser = businessUserService.getBusinessUserByEmail(userPrincipal.getEmail())
+                    .orElseThrow(() -> new ResourceNotFoundException("BusinessUser not found"));
+            log.debug("Found business user: {}", businessUser.getId());
+
             JobListingResponseDto created = jobListingService.createJob(jobDto, businessUser);
+            log.info("Successfully created job listing with ID: {}", created.getId());
+
             redirectAttributes.addFlashAttribute("successMessage", "Вакансия успешно создана");
             return "redirect:/jobs/" + created.getId();
         } catch (Exception e) {
+            log.error("Error creating job listing", e);
             redirectAttributes.addFlashAttribute("errorMessage", "Ошибка при создании вакансии: " + e.getMessage());
             redirectAttributes.addFlashAttribute("jobDto", jobDto);
             return "redirect:/jobs/create";
@@ -98,14 +121,16 @@ public class JobListingWebController {
     }
 
     @GetMapping("/{id}")
-    public String viewJob(@PathVariable Long id, Model model, @AuthenticationPrincipal BaseUser currentUser) {
+    public String viewJob(@PathVariable Long id, Model model, @AuthenticationPrincipal UserPrincipal currentUser) {
         JobListingResponseDto job = jobListingService.getJobById(id);
         model.addAttribute("job", job);
+        model.addAttribute("currentUserId", currentUser.getId());
+        model.addAttribute("currentUserRole", currentUser.getRole());
 
-        if (currentUser instanceof RegularUser) {
-            // Получаем сущность JobListing для проверки возможности подачи заявки
+        if (currentUser.getRole() == UserRole.REGULAR_USER) {
             JobListing jobListing = jobListingService.findJobListingById(id);
-            boolean canApply = jobListingService.canApply((RegularUser) currentUser, jobListing);
+            RegularUser regularUser = userService.getRegularUserById(currentUser.getId());
+            boolean canApply = jobListingService.canApply(regularUser, jobListing);
             model.addAttribute("canApply", canApply);
         }
 

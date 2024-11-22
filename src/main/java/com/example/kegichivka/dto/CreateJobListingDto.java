@@ -53,7 +53,7 @@ public class CreateJobListingDto {
 
     private List<String> photoUrls;
 
-    private boolean remote; // изменено с isRemote на remote
+    private boolean remote;
 
     private String benefits;
 

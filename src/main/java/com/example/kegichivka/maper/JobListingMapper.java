@@ -36,29 +36,29 @@ public abstract class JobListingMapper {
     @Autowired
     protected JobApplicationRepository jobApplicationRepository;
 
+
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "version", constant = "0L")
+    @Mapping(target = "status", constant = "PENDING")
+    @Mapping(target = "active", constant = "true")
+    @Mapping(target = "category", source = "dto.categoryId")
+    @Mapping(target = "businessUser", source = "businessUser")
+    @Mapping(target = "viewStatistics", ignore = true)
+    @Mapping(target = "jobApplications", ignore = true)
+    @Mapping(target = "applications", ignore = true)
+    @Mapping(target = "company", ignore = true)
+    public abstract JobListing toEntity(CreateJobListingDto dto, BusinessUser businessUser);
+
     @Mapping(target = "applicationsCount", expression = "java(getApplicationsCount(jobListing))")
     @Mapping(target = "viewsCount", expression = "java(getViewsCount(jobListing))")
     @Mapping(target = "active", source = "active")
+    @Mapping(target = "businessUser", source = "businessUser")
     public abstract JobListingResponseDto toResponseDto(JobListing jobListing);
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "version", ignore = true)
-    @Mapping(target = "status", constant = "PENDING")
-    @Mapping(target = "category", source = "dto.categoryId")
-    @Mapping(target = "businessUser", source = "businessUser")
-    public abstract JobListing toEntity(CreateJobListingDto dto, BusinessUser businessUser);
-
-    // Реализация базового маппинга из JobListingResponseDto
-    @AfterMapping
-    protected void afterMapping(CreateJobListingDto dto, @MappingTarget JobListing jobListing) {
-        jobListing.setRemote(dto.isRemote());
-    }
 
     public abstract JobListingShortDto toShortDto(JobListing jobListing);
 
-    public abstract List<JobListingShortDto> toShortDtoList(List<JobListing> jobListings);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     public abstract void updateEntityFromDto(UpdateJobListingDto dto, @MappingTarget JobListing entity);
@@ -72,6 +72,12 @@ public abstract class JobListingMapper {
                 .map(JobViewStatistics::getViewCount)
                 .orElse(0L);
     }
+    // Реализация базового маппинга из JobListingResponseDto
+    @AfterMapping
+    protected void afterMapping(CreateJobListingDto dto, @MappingTarget JobListing jobListing) {
+        jobListing.setRemote(dto.isRemote());
+    }
+
 
     protected Category mapCategory(Long categoryId) {
         if (categoryId == null) {

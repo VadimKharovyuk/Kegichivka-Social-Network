@@ -1,0 +1,33 @@
+<!-- templates/categories/edit.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Category</title>
+</head>
+<body>
+<h1>Edit Category</h1>
+<form th:action="@{/categories/edit/{id}(id=${category.id})}" th:object="${category}" method="post">
+  <input type="hidden" th:field="*{id}"/>
+  <div>
+    <label>Name:</label>
+    <input type="text" th:field="*{name}" required/>
+  </div>
+  <div>
+    <label>Description:</label>
+    <textarea th:field="*{description}"></textarea>
+  </div>
+  <div>
+    <label>Parent Category:</label>
+    <select th:field="*{parentCategoryId}">
+      <option value="">No Parent</option>
+      <option th:each="cat : ${categories}"
+              th:value="${cat.id}"
+              th:text="${cat.name}"
+              th:selected="${cat.id == category.parentCategoryId}">
+      </option>
+    </select>
+  </div>
+  <button type="submit">Update</button>
+</form>
+</body>
+</html>
