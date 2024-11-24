@@ -2,10 +2,7 @@ package com.example.kegichivka.dto;
 
 import com.example.kegichivka.enums.EmploymentType;
 import com.example.kegichivka.enums.ExperienceLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,6 +12,8 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class JobListingShortDto {
     private Long id;
     private String title;

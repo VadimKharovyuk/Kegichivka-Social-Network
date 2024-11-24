@@ -27,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -55,30 +56,56 @@ public class JobListingWebController {
             @RequestParam(required = false) Boolean isRemote,
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        JobSearchDto searchDto = JobSearchDto.builder()
-                .keyword(keyword)
-                .categoryIds(categoryIds)
-                .minSalary(minSalary)
-                .maxSalary(maxSalary)
-                .isRemote(isRemote)
-                .build();
+        try {
+            JobSearchDto searchDto = JobSearchDto.builder()
+                    .keyword(keyword)
+                    .categoryIds(categoryIds)
+                    .minSalary(minSalary)
+                    .maxSalary(maxSalary)
+                    .isRemote(isRemote)
+                    .build();
 
-        Page<JobListingShortDto> jobs = jobListingService.searchJobs(searchDto, pageable);
+            // Получаем результаты поиска
+            Page<JobListingShortDto> searchResults = jobListingService.searchJobs(searchDto, pageable);
 
-        model.addAttribute("jobs", jobs);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("categories", categoryRepository.findAll());
-        model.addAttribute("currentSearch", searchDto);
+            // Получаем активные вакансии только если нет результатов поиска
+            Page<JobListingShortDto> activeJobs = null;
+            if (hasSearchCriteria(searchDto) && searchResults.isEmpty()) {
+                // Если был поиск и он пустой - показываем сообщение
+                model.addAttribute("noSearchResults", true);
+            } else if (!hasSearchCriteria(searchDto)) {
+                // Если поиска не было - показываем активные вакансии
+                activeJobs = jobListingService.getActiveJobs(pageable);
+            }
+
+            model.addAttribute("searchResults", searchResults);
+            model.addAttribute("activeJobs", activeJobs);
+            model.addAttribute("keyword", keyword);
+            model.addAttribute("categories", categoryRepository.findAll());
+            model.addAttribute("currentSearch", searchDto);
+            model.addAttribute("hasSearch", hasSearchCriteria(searchDto));
+
+        } catch (Exception e) {
+            log.error("Error during job search", e);
+            model.addAttribute("error", "Произошла ошибка при поиске. Попробуйте позже.");
+        }
 
         return "jobs/list";
+    }
+
+    private boolean hasSearchCriteria(JobSearchDto searchDto) {
+        return StringUtils.hasText(searchDto.getKeyword()) ||
+                searchDto.getMinSalary() != null ||
+                searchDto.getMaxSalary() != null ||
+                (searchDto.getCategoryIds() != null && !searchDto.getCategoryIds().isEmpty()) ||
+                searchDto.getIsRemote() != null;
     }
 
     @GetMapping("/create")
     @PreAuthorize("hasRole('BUSINESS_USER')")
     public String showCreateForm(Model model) {
-        if (!model.containsAttribute("jobDto")) {
+       model.containsAttribute("jobDto") ;
             model.addAttribute("jobDto", new CreateJobListingDto());
-        }
         List<Category> categories = categoryRepository.findAll();
         model.addAttribute("categories", categories);
         return "jobs/create";

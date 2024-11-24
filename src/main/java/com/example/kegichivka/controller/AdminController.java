@@ -52,7 +52,7 @@ public class AdminController {
     private final JwtService jwtService;
 
     @GetMapping("/dashboard")
-    public String dashboard(Model model, HttpSession session, HttpServletResponse response) {
+    public String dashboard(Model model) {
         try {
             // Получаем email текущего авторизованного пользователя
             String email = SecurityContextHolder.getContext().getAuthentication().getName();

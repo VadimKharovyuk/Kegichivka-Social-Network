@@ -10,6 +10,7 @@ import com.example.kegichivka.repositoty.CategoryRepository;
 import com.example.kegichivka.repositoty.JobApplicationRepository;
 import com.example.kegichivka.repositoty.JobListingRepository;
 import com.example.kegichivka.repositoty.ViewStatisticsRepository;
+import jakarta.persistence.criteria.Join;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -118,52 +119,42 @@ public class JobListingService {
 
     private Specification<JobListing> createSearchSpecification(JobSearchDto searchDto) {
         return (root, query, cb) -> {
-            List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
+            List<Predicate> predicates = new ArrayList<>();
 
-            predicates.add(cb.equal(root.get("active"), true));
-            predicates.add(cb.equal(root.get("status"), ListingStatus.APPROVED));
-
+            // Поиск по ключевому слову
             if (StringUtils.hasText(searchDto.getKeyword())) {
-                String keyword = "%" + searchDto.getKeyword().toLowerCase() + "%";
+                String pattern = "%" + searchDto.getKeyword().toLowerCase() + "%";
                 predicates.add(cb.or(
-                        cb.like(cb.lower(root.get("title")), keyword),
-                        cb.like(cb.lower(root.get("description")), keyword),
-                        cb.like(cb.lower(root.get("position")), keyword)
+                        cb.like(cb.lower(root.get("title")), pattern),
+                        cb.like(cb.lower(root.get("position")), pattern),
+                        cb.like(cb.lower(root.get("description")), pattern)
                 ));
             }
 
+            // Поиск по зарплате
             if (searchDto.getMinSalary() != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("salary"), searchDto.getMinSalary()));
             }
+
             if (searchDto.getMaxSalary() != null) {
                 predicates.add(cb.lessThanOrEqualTo(root.get("salary"), searchDto.getMaxSalary()));
             }
 
-            if (!CollectionUtils.isEmpty(searchDto.getEmploymentTypes())) {
-                predicates.add(root.get("employmentType").in(searchDto.getEmploymentTypes()));
+            // Поиск по категориям
+            if (searchDto.getCategoryIds() != null && !searchDto.getCategoryIds().isEmpty()) {
+                Join<JobListing, Category> categoryJoin = root.join("categories");
+                predicates.add(categoryJoin.get("id").in(searchDto.getCategoryIds()));
             }
 
-            if (!CollectionUtils.isEmpty(searchDto.getExperienceLevels())) {
-                predicates.add(root.get("requiredExperience").in(searchDto.getExperienceLevels()));
-            }
-
+            // Поиск по типу работы (удаленная/офис)
             if (searchDto.getIsRemote() != null) {
                 predicates.add(cb.equal(root.get("remote"), searchDto.getIsRemote()));
             }
 
-            if (!CollectionUtils.isEmpty(searchDto.getCategoryIds())) {
-                predicates.add(root.get("category").get("id").in(searchDto.getCategoryIds()));
-            }
+            // Добавляем условие, что вакансия должна быть активной
+            predicates.add(cb.equal(root.get("active"), true));
 
-            if (!CollectionUtils.isEmpty(searchDto.getCompanyIds())) {
-                predicates.add(root.get("company").get("id").in(searchDto.getCompanyIds()));
-            }
-
-            if (searchDto.getPostedAfter() != null) {
-                predicates.add(cb.greaterThanOrEqualTo(root.get("createdAt"), searchDto.getPostedAfter()));
-            }
-
-            return cb.and(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 

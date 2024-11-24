@@ -175,53 +175,53 @@
 <div th:replace="~{fragments/navigation :: navigation}"></div>
 
 <div class="container">
-  <h1>Create New Resume</h1>
+  <h1>Створити нове резюме</h1>
 
   <form th:action="@{/resumes/create}" th:object="${resumeDto}" method="post">
     <div>
-      <label for="position" class="required">Position</label>
+      <label for="position" class="required">Посада</label>
       <input type="text" id="position" th:field="*{position}" required
-             placeholder="Enter your desired position">
+             placeholder="Введіть бажану посаду">
     </div>
 
     <div>
-      <label for="languages">Languages</label>
+      <label for="languages">Мови</label>
       <input type="text" id="languages" th:field="*{languages}"
-             placeholder="e.g., English, Spanish, French">
+             placeholder="Наприклад: англійська, іспанська, французька">
     </div>
 
     <div class="checkbox-group">
       <input type="checkbox" id="remoteWork" th:field="*{remoteWork}">
-      <label for="remoteWork">Available for Remote Work</label>
+      <label for="remoteWork">Доступний для віддаленої роботи</label>
     </div>
 
     <div>
-      <label for="desiredSalary">Desired Salary</label>
+      <label for="desiredSalary">Бажана заробітна плата</label>
       <input type="number" id="desiredSalary" th:field="*{desiredSalary}"
-             placeholder="Enter your desired salary">
+             placeholder="Введіть бажану заробітну плату">
     </div>
 
     <div>
-      <label for="skills">Skills</label>
+      <label for="skills">Навички</label>
       <input type="text" id="skills" name="skills"
-             placeholder="e.g., Java, Spring, SQL">
+             placeholder="Наприклад: Java, Spring, SQL">
     </div>
 
     <div>
-      <label for="aboutMe">About Me</label>
+      <label for="aboutMe">Про мене</label>
       <textarea id="aboutMe" th:field="*{aboutMe}" rows="5"
-                placeholder="Tell us about yourself, your experience and achievements"></textarea>
+                placeholder="Розкажіть про себе, свій досвід та досягнення"></textarea>
     </div>
 
     <div class="checkbox-group">
       <input type="checkbox" id="visible" th:field="*{visible}" checked>
-      <label for="visible">Make Resume Visible to Employers</label>
+      <label for="visible">Зробити резюме видимим для роботодавців</label>
     </div>
 
-    <button type="submit">Create Resume</button>
+    <button type="submit">Створити резюме</button>
   </form>
 
-  <a href="/" class="back-link">← Back to Home</a>
+  <a href="/" class="back-link">← Повернутися на головну</a>
 </div>
 
 </body>
