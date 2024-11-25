@@ -5,45 +5,44 @@ import lombok.Getter;
 @Getter
 public enum NotificationType {
     // Уведомления для соискателей
-    JOB_APPLICATION_RECEIVED("Заявка на вакансию получена"),
-    JOB_APPLICATION_VIEWED("Работодатель просмотрел вашу заявку"),
-    JOB_APPLICATION_STATUS_CHANGED("Статус вашей заявки изменен"),
-    INTERVIEW_INVITATION("Приглашение на собеседование"),
-    JOB_OFFER_RECEIVED("Получено предложение о работе"),
+    JOB_APPLICATION_RECEIVED("Заявка на вакансію отримана"),
+    JOB_APPLICATION_VIEWED("Роботодавець переглянув вашу заявку"),
+    JOB_APPLICATION_STATUS_CHANGED("Статус вашої заявки змінено"),
+    INTERVIEW_INVITATION("Запрошення на співбесіду"),
+    JOB_OFFER_RECEIVED("Отримано пропозицію роботи"),
 
     // Уведомления о новых вакансиях
-    NEW_MATCHING_JOB("Новая вакансия по вашим критериям"),
-    SAVED_SEARCH_RESULTS("Новые результаты по сохраненному поиску"),
-    SAVED_JOB_DEADLINE("Срок действия сохраненной вакансии истекает"),
+    NEW_MATCHING_JOB("Нова вакансія за вашими критеріями"),
+    SAVED_SEARCH_RESULTS("Нові результати збереженого пошуку"),
+    SAVED_JOB_DEADLINE("Термін дії збереженої вакансії закінчується"),
 
     // Уведомления для работодателей
-    NEW_APPLICATION_RECEIVED("Получена новая заявка на вакансию"),
-    CANDIDATE_PROFILE_UPDATE("Кандидат обновил свой профиль"),
-    APPLICATION_RESPONSE_REQUIRED("Требуется ответ на заявку"),
-    LISTING_EXPIRING("Срок публикации вакансии истекает"),
-    LISTING_VIEWS_MILESTONE("Достигнут порог просмотров вакансии"),
+    NEW_APPLICATION_RECEIVED("Отримано нову заявку на вакансію"),
+    CANDIDATE_PROFILE_UPDATE("Кандидат оновив свій профіль"),
+    APPLICATION_RESPONSE_REQUIRED("Необхідно відповісти на заявку"),
+    LISTING_EXPIRING("Термін публікації вакансії спливає"),
+    LISTING_VIEWS_MILESTONE("Досягнуто поріг переглядів вакансії"),
 
     // Системные уведомления
-    ACCOUNT_VERIFICATION("Подтверждение аккаунта"),
-    PASSWORD_RESET("Сброс пароля"),
-    PROFILE_INCOMPLETE("Заполните профиль"),
-    DOCUMENT_VERIFICATION("Проверка документов"),
-    SUBSCRIPTION_EXPIRING("Срок подписки истекает"),
+    ACCOUNT_VERIFICATION("Підтвердження акаунта"),
+    PASSWORD_RESET("Скидання пароля"),
+    PROFILE_INCOMPLETE("Заповніть профіль"),
+    DOCUMENT_VERIFICATION("Перевірка документів"),
+    SUBSCRIPTION_EXPIRING("Термін підписки спливає"),
 
     // Уведомления о взаимодействии
-    NEW_MESSAGE("Новое сообщение"),
-    NEW_REVIEW("Новый отзыв"),
-    REVIEW_RESPONSE("Ответ на отзыв"),
+    NEW_MESSAGE("Нове повідомлення"),
+    NEW_REVIEW("Новий відгук"),
+    REVIEW_RESPONSE("Відповідь на відгук"),
 
     // Уведомления о событиях
-    UPCOMING_INTERVIEW("Предстоящее собеседование"),
-    INTERVIEW_RESCHEDULED("Собеседование перенесено"),
-    INTERVIEW_CANCELLED("Собеседование отменено");
+    UPCOMING_INTERVIEW("Наближається співбесіда"),
+    INTERVIEW_RESCHEDULED("Співбесіда перенесена"),
+    INTERVIEW_CANCELLED("Співбесіда скасована");
 
-    private final String description;
+    private final String displayName;
 
-    NotificationType(String description) {
-        this.description = description;
+    NotificationType(String displayName) {
+        this.displayName = displayName;
     }
-
 }

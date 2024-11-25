@@ -9,27 +9,27 @@
 <body>
 
 <div class="container mt-4">
-    <!-- Header -->
+    <!-- Заголовок -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a th:href="@{/companies}" class="btn btn-outline-secondary me-2">
-                <i class="fas fa-arrow-left"></i> Back to Companies
+                <i class="fas fa-arrow-left"></i> Назад до компаній
             </a>
         </div>
         <div>
             <a th:href="@{/companies/{id}/edit(id=${company.id})}" class="btn btn-primary me-2">
-                <i class="fas fa-edit"></i> Edit
+                <i class="fas fa-edit"></i> Редагувати
             </a>
         </div>
     </div>
 
-    <!-- Company Header -->
+    <!-- Заголовок компанії -->
     <div class="card mb-4">
         <div class="card-body">
             <div class="row">
                 <div class="col-md-2">
                     <img th:if="${company.logo}" th:src="${company.logo}"
-                         class="img-fluid rounded" alt="Company logo">
+                         class="img-fluid rounded" alt="Логотип компанії">
                     <div th:unless="${company.logo}" class="text-center p-4 bg-light rounded">
                         <i class="fas fa-building fa-4x text-secondary"></i>
                     </div>
@@ -39,7 +39,7 @@
                         <h1 class="mb-2">
                             <span th:text="${company.title}"></span>
                             <span th:if="${company.verified}" class="badge bg-success ms-2">
-                               <i class="fas fa-check-circle"></i> Verified
+                               <i class="fas fa-check-circle"></i> Підтверджено
                            </span>
                         </h1>
                     </div>
@@ -51,7 +51,7 @@
                        </span>
                         <span class="me-4">
                            <i class="fas fa-users"></i>
-                           <span th:text="${company.employeesCount + ' employees'}"></span>
+                           <span th:text="${company.employeesCount + ' співробітників'}"></span>
                        </span>
                         <span th:if="${company.website}" class="me-4">
                            <i class="fas fa-globe"></i>
@@ -63,16 +63,16 @@
                     <div class="company-stats d-flex mb-3">
                         <div class="me-4">
                             <i class="fas fa-briefcase"></i>
-                            <strong th:text="${company.totalJobListings}"></strong> Active Jobs
+                            <strong th:text="${company.totalJobListings}"></strong> Активні вакансії
                         </div>
                         <div class="me-4">
                             <i class="fas fa-star text-warning"></i>
                             <strong th:text="${#numbers.formatDecimal(company.averageRating, 1, 1)}"></strong>
-                            (<span th:text="${company.reviewsCount}"></span> reviews)
+                            (<span th:text="${company.reviewsCount}"></span> відгуків)
                         </div>
                         <div th:if="${company.verificationDate}" class="me-4">
                             <i class="fas fa-calendar-check"></i>
-                            Verified on <span th:text="${#temporals.format(company.verificationDate, 'dd MMM yyyy')}">
+                            Підтверджено <span th:text="${#temporals.format(company.verificationDate, 'dd MMM yyyy')}">
                            </span>
                         </div>
                     </div>
@@ -81,11 +81,11 @@
         </div>
     </div>
 
-    <!-- Company Description -->
+    <!-- Опис компанії -->
     <div class="card mb-4">
         <div class="card-header">
             <h5 class="card-title mb-0">
-                <i class="fas fa-info-circle"></i> About Company
+                <i class="fas fa-info-circle"></i> Про компанію
             </h5>
         </div>
         <div class="card-body">
@@ -93,11 +93,11 @@
         </div>
     </div>
 
-    <!-- Location Information -->
+    <!-- Інформація про локацію -->
     <div class="card mb-4">
         <div class="card-header">
             <h5 class="card-title mb-0">
-                <i class="fas fa-location-dot"></i> Headquarters Location
+                <i class="fas fa-location-dot"></i> Розташування головного офісу
             </h5>
         </div>
         <div class="card-body">
@@ -114,11 +114,11 @@
         </div>
     </div>
 
-    <!-- Social Links -->
+    <!-- Соціальні посилання -->
     <div class="card mb-4" th:if="${!company.socialLinks.empty}">
         <div class="card-header">
             <h5 class="card-title mb-0">
-                <i class="fas fa-share-nodes"></i> Social Media
+                <i class="fas fa-share-nodes"></i> Соціальні мережі
             </h5>
         </div>
         <div class="card-body">
@@ -138,42 +138,39 @@
                    class="btn btn-outline-primary" target="_blank">
                     <i class="fab fa-facebook"></i> Facebook
                 </a>
-                <!-- Add more social media buttons as needed -->
             </div>
         </div>
     </div>
 
-    <!-- Creation Info -->
+    <!-- Інформація про створення -->
     <div class="card mb-4">
         <div class="card-body text-muted">
             <small>
-                <i class="fas fa-clock"></i> Created:
+                <i class="fas fa-clock"></i> Створено:
                 <span th:text="${#temporals.format(company.createdAt, 'dd MMM yyyy HH:mm')}"></span>
                 <span class="mx-2">|</span>
-                <i class="fas fa-pencil"></i> Last updated:
+                <i class="fas fa-pencil"></i> Останнє оновлення:
                 <span th:text="${#temporals.format(company.updatedAt, 'dd MMM yyyy HH:mm')}"></span>
             </small>
         </div>
     </div>
 
-    <!-- Active Job Listings -->
+    <!-- Активні вакансії -->
     <div class="card mb-4" th:if="${company.totalJobListings > 0}">
         <div class="card-header">
             <h5 class="card-title mb-0">
-                <i class="fas fa-briefcase"></i> Active Job Listings
+                <i class="fas fa-briefcase"></i> Активні вакансії
             </h5>
         </div>
         <div class="card-body">
-            <!-- Add job listings component here -->
             <p class="text-center">
                 <a th:href="@{/jobs(companyId=${company.id})}" class="btn btn-outline-primary">
-                    <i class="fas fa-list"></i> View All Job Listings
+                    <i class="fas fa-list"></i> Переглянути всі вакансії
                 </a>
             </p>
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

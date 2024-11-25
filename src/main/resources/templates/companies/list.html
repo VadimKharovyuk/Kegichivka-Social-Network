@@ -9,44 +9,44 @@
 <body>
 
 <div class="container mt-4">
-    <!-- Header -->
+    <!-- Заголовок -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Companies</h1>
+        <h1>Компанії</h1>
         <a th:href="@{/companies/create}" class="btn btn-primary">
-            <i class="fas fa-plus-circle"></i> Add New Company
+            <i class="fas fa-plus-circle"></i> Додати нову компанію
         </a>
     </div>
 
-    <!-- Search form -->
+    <!-- Форма пошуку -->
     <div class="search-section bg-light p-4 rounded mb-4">
         <form th:action="@{/companies}" method="get" class="row g-3">
             <div class="col-md-4">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
                     <input type="text" class="form-control" name="keyword" th:value="${keyword}"
-                           placeholder="Search companies...">
+                           placeholder="Пошук компаній...">
                 </div>
             </div>
 
             <div class="col-md-2">
                 <input type="number" class="form-control" name="minEmployees"
                        th:value="${currentSearch?.minEmployees}"
-                       placeholder="Min employees">
+                       placeholder="Мін. працівників">
             </div>
 
             <div class="col-md-2">
                 <input type="number" class="form-control" name="maxEmployees"
                        th:value="${currentSearch?.maxEmployees}"
-                       placeholder="Max employees">
+                       placeholder="Макс. працівників">
             </div>
 
             <div class="col-md-2">
                 <select name="industry" class="form-select">
-                    <option value="">All Industries</option>
-                    <option value="IT">IT</option>
-                    <option value="Finance">Finance</option>
-                    <option value="Healthcare">Healthcare</option>
-                    <!-- Add more industries -->
+                    <option value="">Всі індустрії</option>
+                    <option value="IT">ІТ</option>
+                    <option value="Finance">Фінанси</option>
+                    <option value="Healthcare">Охорона здоров'я</option>
+                    <!-- Додати більше індустрій -->
                 </select>
             </div>
 
@@ -54,23 +54,23 @@
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="verified"
                            th:checked="${currentSearch?.verified}">
-                    <label class="form-check-label">Verified only</label>
+                    <label class="form-check-label">Тільки перевірені</label>
                 </div>
             </div>
 
             <div class="col-md-1">
-                <button type="submit" class="btn btn-primary w-100">Search</button>
+                <button type="submit" class="btn btn-primary w-100">Пошук</button>
             </div>
         </form>
     </div>
 
-    <!-- Companies list -->
+    <!-- Список компаній -->
     <div th:if="${companies != null && !companies.empty}">
         <div th:each="company : ${companies.content}" class="card mb-3">
             <div class="row g-0">
                 <div class="col-md-2">
                     <img th:if="${company.logo}" th:src="${company.logo}" class="img-fluid rounded-start"
-                         alt="Company logo">
+                         alt="Логотип компанії">
                     <div th:unless="${company.logo}" class="placeholder-logo">
                         <i class="fas fa-building"></i>
                     </div>
@@ -82,7 +82,7 @@
                                 <a th:href="@{/companies/{id}(id=${company.id})}"
                                    th:text="${company.title}"></a>
                                 <span th:if="${company.verified}" class="badge bg-success">
-                                    <i class="fas fa-check-circle"></i> Verified
+                                    <i class="fas fa-check-circle"></i> Перевірено
                                 </span>
                             </h5>
                         </div>
@@ -96,7 +96,7 @@
                             </span>
                             <span class="me-3">
                                 <i class="fas fa-users"></i>
-                                <span th:text="${company.employeesCount + ' employees'}"></span>
+                                <span th:text="${company.employeesCount + ' працівників'}"></span>
                             </span>
                             <span th:if="${company.headquarters}" class="me-3">
                                 <i class="fas fa-location-dot"></i>
@@ -108,13 +108,13 @@
                         <div class="stats mt-2">
                             <span class="me-3">
                                 <i class="fas fa-briefcase"></i>
-                                Active Jobs: <span th:text="${company.totalJobListings}"></span>
+                                Активних вакансій: <span th:text="${company.totalJobListings}"></span>
                             </span>
                             <span class="me-3">
                                 <i class="fas fa-star"></i>
-                                Rating: <span th:text="${#numbers.formatDecimal(company.averageRating,
+                                Рейтинг: <span th:text="${#numbers.formatDecimal(company.averageRating,
                                                       1, 1)}"></span>
-                                (<span th:text="${company.reviewsCount}"></span> reviews)
+                                (<span th:text="${company.reviewsCount}"></span> відгуків)
                             </span>
                         </div>
                     </div>
@@ -122,8 +122,8 @@
             </div>
         </div>
 
-        <!-- Pagination -->
-        <nav th:if="${companies.totalPages > 1}" aria-label="Page navigation" class="mt-4">
+        <!-- Пагінація -->
+        <nav th:if="${companies.totalPages > 1}" aria-label="Навігація сторінками" class="mt-4">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${companies.first ? 'disabled' : ''}">
                     <a class="page-link" th:href="@{/companies(page=${companies.number - 1})}">
@@ -145,16 +145,16 @@
         </nav>
     </div>
 
-    <!-- No results message -->
+    <!-- Повідомлення про відсутність результатів -->
     <div th:if="${companies.empty}" class="alert alert-info">
-        <h4 class="alert-heading"><i class="fas fa-info-circle"></i> No companies found</h4>
-        <p th:if="${hasSearch}">Try adjusting your search criteria</p>
-        <p th:unless="${hasSearch}">There are no companies registered yet</p>
+        <h4 class="alert-heading"><i class="fas fa-info-circle"></i> Компаній не знайдено</h4>
+        <p th:if="${hasSearch}">Спробуйте змінити критерії пошуку</p>
+        <p th:unless="${hasSearch}">Ще немає зареєстрованих компаній</p>
     </div>
 
-    <!-- Error message -->
+    <!-- Повідомлення про помилку -->
     <div th:if="${error}" class="alert alert-danger">
-        <h4 class="alert-heading"><i class="fas fa-exclamation-circle"></i> Error</h4>
+        <h4 class="alert-heading"><i class="fas fa-exclamation-circle"></i> Помилка</h4>
         <p th:text="${error}"></p>
     </div>
 </div>

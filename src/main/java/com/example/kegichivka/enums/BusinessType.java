@@ -1,14 +1,13 @@
 package com.example.kegichivka.enums;
 
 import lombok.Getter;
-
 @Getter
 public enum BusinessType {
-    EMPLOYER("Работодатель", "Размещение вакансий"),
-    REAL_ESTATE_RENT("Аренда недвижимости", "Сдача недвижимости в аренду"),
-    REAL_ESTATE_SALE("Продажа недвижимости", "Продажа недвижимости"),
-    REAL_ESTATE_BOTH("Аренда и продажа", "Аренда и продажа недвижимости"),
-    BUSINESS_ALL("Все услуги", "Работодатель и операции с недвижимостью");
+    EMPLOYER("Роботодавець", "Розміщення вакансій"),
+    REAL_ESTATE_RENT("Оренда нерухомості", "Здача нерухомості в оренду"),
+    REAL_ESTATE_SALE("Продаж нерухомості", "Продаж нерухомості"),
+    REAL_ESTATE_BOTH("Оренда і продаж", "Оренда і продаж нерухомості"),
+    BUSINESS_ALL("Усі послуги", "Роботодавець та операції з нерухомістю");
 
     private final String type;
     private final String description;
@@ -17,5 +16,4 @@ public enum BusinessType {
         this.type = type;
         this.description = description;
     }
-
 }

@@ -4,13 +4,13 @@ import lombok.Getter;
 
 @Getter
 public enum ListingStatus {
-    PENDING("На проверке"),
+    PENDING("На перевірці"),
     ACTIVE("Активно"),
-    PAUSED("Приостановлено"),
-    EXPIRED("Истекло"),
-    ARCHIVED("В архиве"),
-    REJECTED("Отклонено"),
-    APPROVED("ОДОБРЕННЫЙ");
+    PAUSED("Призупинено"),
+    EXPIRED("Строк вийшов"),
+    ARCHIVED("В архіві"),
+    REJECTED("Відхилено"),
+    APPROVED("СХВАЛЕНО");
 
     private final String displayName;
 

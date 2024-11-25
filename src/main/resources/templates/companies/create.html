@@ -9,147 +9,137 @@
 <body>
 
 <div class="container mt-4">
-  <!-- Header -->
+  <!-- Заголовок -->
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Create New Company</h1>
+    <h1>Создать новую компанию</h1>
     <a th:href="@{/companies}" class="btn btn-outline-secondary">
-      <i class="fas fa-arrow-left"></i> Back to Companies
+      <i class="fas fa-arrow-left"></i> Вернуться к списку компаний
     </a>
   </div>
 
-  <!-- Error Alert -->
+  <!-- Уведомление об ошибке -->
   <div th:if="${error}" class="alert alert-danger" role="alert">
     <i class="fas fa-exclamation-circle"></i>
     <span th:text="${error}"></span>
   </div>
 
-  <!-- Company Form -->
+  <!-- Форма для создания компании -->
   <form th:action="@{/companies/create}" th:object="${companyDto}" method="post" class="needs-validation">
     <div class="card">
       <div class="card-body">
-        <!-- Basic Information Section -->
-        <h5 class="card-title mb-4">Basic Information</h5>
+        <!-- Базовая информация -->
+        <h5 class="card-title mb-4">Основная информация</h5>
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="title" class="form-label">Company Name *</label>
+            <label for="title" class="form-label">Название компании *</label>
             <input type="text" class="form-control" id="title" th:field="*{title}" required>
             <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
-              Please provide a company name
+              Пожалуйста, укажите название компании
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="industry" class="form-label">Industry *</label>
+            <label for="industry" class="form-label">Отрасль *</label>
             <select class="form-select" id="industry" th:field="*{industry}" required>
-              <option value="">Select Industry</option>
-              <option value="IT">Information Technology</option>
-              <option value="Finance">Finance</option>
-              <option value="Healthcare">Healthcare</option>
-              <option value="Education">Education</option>
-              <option value="Manufacturing">Manufacturing</option>
-              <option value="Retail">Retail</option>
-              <!-- Add more industries as needed -->
+              <option value="">Выберите отрасль</option>
+              <option value="IT">Информационные технологии</option>
+              <option value="Finance">Финансы</option>
+              <option value="Healthcare">Здравоохранение</option>
+              <option value="Education">Образование</option>
+              <option value="Manufacturing">Производство</option>
+              <option value="Retail">Розничная торговля</option>
             </select>
             <div class="invalid-feedback" th:if="${#fields.hasErrors('industry')}" th:errors="*{industry}">
-              Please select an industry
+              Пожалуйста, выберите отрасль
             </div>
           </div>
         </div>
 
         <div class="mb-3">
-          <label for="description" class="form-label">Description *</label>
+          <label for="description" class="form-label">Описание *</label>
           <textarea class="form-control" id="description" th:field="*{description}" rows="4" required></textarea>
           <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">
-            Please provide a description
+            Пожалуйста, укажите описание
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="website" class="form-label">Website</label>
+            <label for="website" class="form-label">Веб-сайт</label>
             <input type="url" class="form-control" id="website" th:field="*{website}">
             <div class="invalid-feedback" th:if="${#fields.hasErrors('website')}" th:errors="*{website}">
-              Please enter a valid URL
+              Укажите корректный URL
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="employeesCount" class="form-label">Number of Employees *</label>
-            <input type="number" class="form-control" id="employeesCount" th:field="*{employeesCount}"
-                   min="1" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('employeesCount')}"
-                 th:errors="*{employeesCount}">
-              Please enter a valid number of employees
+            <label for="employeesCount" class="form-label">Количество сотрудников *</label>
+            <input type="number" class="form-control" id="employeesCount" th:field="*{employeesCount}" min="1" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('employeesCount')}" th:errors="*{employeesCount}">
+              Укажите корректное количество сотрудников
             </div>
           </div>
         </div>
 
-        <!-- Location Section -->
-        <h5 class="card-title mb-4 mt-4">Headquarters Location</h5>
+        <!-- Локация -->
+        <h5 class="card-title mb-4 mt-4">Местоположение офиса</h5>
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="headquarters.country" class="form-label">Country *</label>
-            <input type="text" class="form-control" id="headquarters.country"
-                   th:field="*{headquarters.country}" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('headquarters.country')}"
-                 th:errors="*{headquarters.country}">
-              Please enter a country
+            <label for="headquarters.country" class="form-label">Страна *</label>
+            <input type="text" class="form-control" id="headquarters.country" th:field="*{headquarters.country}" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('headquarters.country')}" th:errors="*{headquarters.country}">
+              Укажите страну
             </div>
           </div>
 
           <div class="col-md-6">
-            <label for="headquarters.city" class="form-label">City *</label>
-            <input type="text" class="form-control" id="headquarters.city"
-                   th:field="*{headquarters.city}" required>
-            <div class="invalid-feedback" th:if="${#fields.hasErrors('headquarters.city')}"
-                 th:errors="*{headquarters.city}">
-              Please enter a city
+            <label for="headquarters.city" class="form-label">Город *</label>
+            <input type="text" class="form-control" id="headquarters.city" th:field="*{headquarters.city}" required>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('headquarters.city')}" th:errors="*{headquarters.city}">
+              Укажите город
             </div>
           </div>
         </div>
 
         <div class="mb-3">
-          <label for="headquarters.address" class="form-label">Address</label>
-          <input type="text" class="form-control" id="headquarters.address"
-                 th:field="*{headquarters.address}">
+          <label for="headquarters.address" class="form-label">Адрес</label>
+          <input type="text" class="form-control" id="headquarters.address" th:field="*{headquarters.address}">
         </div>
 
-        <!-- Social Links Section -->
-        <h5 class="card-title mb-4 mt-4">Social Media Links</h5>
+        <!-- Социальные сети -->
+        <h5 class="card-title mb-4 mt-4">Ссылки на социальные сети</h5>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="socialLinks.linkedin" class="form-label">LinkedIn</label>
-            <input type="url" class="form-control" id="socialLinks.linkedin"
-                   th:field="*{socialLinks['linkedin']}">
+            <input type="url" class="form-control" id="socialLinks.linkedin" th:field="*{socialLinks['linkedin']}">
           </div>
 
           <div class="col-md-6">
             <label for="socialLinks.twitter" class="form-label">Twitter</label>
-            <input type="url" class="form-control" id="socialLinks.twitter"
-                   th:field="*{socialLinks['twitter']}">
+            <input type="url" class="form-control" id="socialLinks.twitter" th:field="*{socialLinks['twitter']}">
           </div>
         </div>
 
-        <!-- Logo Upload -->
-        <h5 class="card-title mb-4 mt-4">Company Logo</h5>
+        <!-- Логотип -->
+        <h5 class="card-title mb-4 mt-4">Логотип компании</h5>
 
         <div class="mb-3">
-          <label for="logo" class="form-label">Logo URL</label>
+          <label for="logo" class="form-label">URL логотипа</label>
           <input type="url" class="form-control" id="logo" th:field="*{logo}">
-          <div class="form-text">Enter the URL of your company logo</div>
+          <div class="form-text">Введите URL логотипа компании</div>
         </div>
       </div>
 
       <div class="card-footer">
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
           <a th:href="@{/companies}" class="btn btn-secondary me-md-2">
-            <i class="fas fa-times"></i> Cancel
+            <i class="fas fa-times"></i> Отмена
           </a>
           <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i> Create Company
+            <i class="fas fa-save"></i> Создать компанию
           </button>
         </div>
       </div>
