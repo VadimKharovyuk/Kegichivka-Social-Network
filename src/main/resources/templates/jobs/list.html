@@ -58,15 +58,15 @@
                 <input type="number" class="form-control" name="maxSalary" th:value="${currentSearch?.maxSalary}"
                        placeholder="Макс. зарплата">
             </div>
-            <div class="col-md-2">
-                <select class="form-select" name="categoryIds" multiple>
-                    <option th:each="category : ${categories}"
-                            th:value="${category.id}"
-                            th:text="${category.name}"
-                            th:selected="${currentSearch?.categoryIds != null && currentSearch.categoryIds.contains(category.id)}">
-                    </option>
-                </select>
-            </div>
+<!--            <div class="col-md-2">-->
+<!--                <select class="form-select" name="categoryIds" multiple>-->
+<!--                    <option th:each="category : ${categories}"-->
+<!--                            th:value="${category.id}"-->
+<!--                            th:text="${category.name}"-->
+<!--                            th:selected="${currentSearch?.categoryIds != null && currentSearch.categoryIds.contains(category.id)}">-->
+<!--                    </option>-->
+<!--                </select>-->
+<!--            </div>-->
             <div class="col-md-1">
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="isRemote"

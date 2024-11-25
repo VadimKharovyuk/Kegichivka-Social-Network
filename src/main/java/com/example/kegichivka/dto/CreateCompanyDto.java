@@ -1,5 +1,6 @@
 package com.example.kegichivka.dto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,29 +14,28 @@ import java.util.Map;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class CreateCompanyDto {
-    @NotBlank(message = "Название компании обязательно")
+    @NotBlank(message = "Title is required")
     private String title;
 
-    @NotBlank(message = "Описание компании обязательно")
-    @Size(min = 20, max = 2000, message = "Длина описания должна быть от 20 до 2000 символов")
+    @NotBlank(message = "Description is required")
     private String description;
 
-    @URL(message = "Некорректный URL сайта")
+    @URL(message = "Website must be a valid URL")
     private String website;
 
-    @NotBlank(message = "Укажите отрасль")
+    @NotBlank(message = "Industry is required")
     private String industry;
 
-    @Min(value = 1, message = "Количество сотрудников должно быть больше 0")
+    @Min(value = 1, message = "Employees count must be at least 1")
     private int employeesCount;
-
-    @NotNull(message = "Укажите местоположение штаб-квартиры")
-    private LocationDto headquarters;
 
     private String logo;
 
-    private Map<String, @URL(message = "Некорректный URL социальной сети") String> socialLinks;
+    @Valid
+    private LocationDto headquarters;
+
+    private Map<String, String> socialLinks;
+
+    private boolean active = true;
 }

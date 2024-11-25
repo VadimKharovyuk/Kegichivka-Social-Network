@@ -17,7 +17,8 @@ public class UpdateCompanyDto {
     private String website;
     private String industry;
     private Integer employeesCount;
-    private LocationDto headquarters;
     private String logo;
+    private LocationDto headquarters;
     private Map<String, String> socialLinks;
+    private Boolean active;
 }

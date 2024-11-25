@@ -18,10 +18,18 @@ public interface CompanyMapper {
 
     @Mapping(target = "activeJobsCount", expression = "java(company.getActiveJobListingsCount())")
     CompanyMinDto toMinDto(Company company);
+
     List<CompanyMinDto> toMinDtoList(List<Company> companies);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "verified", constant = "false")
+    @Mapping(target = "verificationDate", ignore = true)
+    @Mapping(target = "jobListings", ignore = true)
+    @Mapping(target = "reviews", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    Company toEntity(CreateCompanyDto dto);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateEntityFromDto(UpdateCompanyDto dto, @MappingTarget Company company);
-
-
 }

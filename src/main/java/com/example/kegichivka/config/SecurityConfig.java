@@ -35,6 +35,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/articles/**").permitAll()
                         .requestMatchers("/categories/**").permitAll()
+                        .requestMatchers("/companies/**").permitAll()
                         // Статические ресурсы
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                         // Swagger UI

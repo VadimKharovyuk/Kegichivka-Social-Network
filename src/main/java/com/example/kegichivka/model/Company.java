@@ -55,36 +55,6 @@ public class Company extends BaseListing {
     @Column(name = "profile_url")
     private Map<String, String> socialLinks = new HashMap<>();
 
-    // Методы для управления вакансиями
-    public void addJobListing(JobListing jobListing) {
-        jobListings.add(jobListing);
-        jobListing.setCompany(this);
-    }
-
-    public void removeJobListing(JobListing jobListing) {
-        jobListings.remove(jobListing);
-        jobListing.setCompany(null);
-    }
-
-    // Методы для управления отзывами
-    public void addReview(Review review) {
-        reviews.add(review);
-        review.setCompany(this);
-    }
-
-    public void removeReview(Review review) {
-        reviews.remove(review);
-        review.setCompany(null);
-    }
-
-    // Методы для социальных сетей
-    public void addSocialLink(String network, String url) {
-        socialLinks.put(network, url);
-    }
-
-    public void removeSocialLink(String network) {
-        socialLinks.remove(network);
-    }
 
 
     // Изменяем возвращаемый тип на int
@@ -111,35 +81,5 @@ public class Company extends BaseListing {
         return reviews != null ? reviews.size() : 0;
     }
 
-    public int getTotalJobListings() {
-        return jobListings != null ? jobListings.size() : 0;
-    }
-
-    // Дополнительные методы для анализа
-    public Map<EmploymentType, Long> getJobsByEmploymentType() {
-        if (jobListings == null) {
-            return new EnumMap<>(EmploymentType.class);
-        }
-        return jobListings.stream()
-                .filter(JobListing::isActive)
-                .collect(Collectors.groupingBy(
-                        JobListing::getEmploymentType,
-                        () -> new EnumMap<>(EmploymentType.class),
-                        Collectors.counting()
-                ));
-    }
-
-    public Map<ExperienceLevel, Long> getJobsByExperienceLevel() {
-        if (jobListings == null) {
-            return new EnumMap<>(ExperienceLevel.class);
-        }
-        return jobListings.stream()
-                .filter(JobListing::isActive)
-                .collect(Collectors.groupingBy(
-                        JobListing::getRequiredExperience,
-                        () -> new EnumMap<>(ExperienceLevel.class),
-                        Collectors.counting()
-                ));
-    }
 }
 

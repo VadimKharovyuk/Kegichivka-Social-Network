@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${company.title}">Company Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <a th:href="@{/companies}" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-arrow-left"></i> Back to Companies
+            </a>
+        </div>
+        <div>
+            <a th:href="@{/companies/{id}/edit(id=${company.id})}" class="btn btn-primary me-2">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+        </div>
+    </div>
+
+    <!-- Company Header -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-2">
+                    <img th:if="${company.logo}" th:src="${company.logo}"
+                         class="img-fluid rounded" alt="Company logo">
+                    <div th:unless="${company.logo}" class="text-center p-4 bg-light rounded">
+                        <i class="fas fa-building fa-4x text-secondary"></i>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h1 class="mb-2">
+                            <span th:text="${company.title}"></span>
+                            <span th:if="${company.verified}" class="badge bg-success ms-2">
+                               <i class="fas fa-check-circle"></i> Verified
+                           </span>
+                        </h1>
+                    </div>
+
+                    <div class="company-meta mb-3">
+                       <span class="me-4">
+                           <i class="fas fa-industry"></i>
+                           <span th:text="${company.industry}"></span>
+                       </span>
+                        <span class="me-4">
+                           <i class="fas fa-users"></i>
+                           <span th:text="${company.employeesCount + ' employees'}"></span>
+                       </span>
+                        <span th:if="${company.website}" class="me-4">
+                           <i class="fas fa-globe"></i>
+                           <a th:href="${company.website}" target="_blank"
+                              th:text="${company.website}"></a>
+                       </span>
+                    </div>
+
+                    <div class="company-stats d-flex mb-3">
+                        <div class="me-4">
+                            <i class="fas fa-briefcase"></i>
+                            <strong th:text="${company.totalJobListings}"></strong> Active Jobs
+                        </div>
+                        <div class="me-4">
+                            <i class="fas fa-star text-warning"></i>
+                            <strong th:text="${#numbers.formatDecimal(company.averageRating, 1, 1)}"></strong>
+                            (<span th:text="${company.reviewsCount}"></span> reviews)
+                        </div>
+                        <div th:if="${company.verificationDate}" class="me-4">
+                            <i class="fas fa-calendar-check"></i>
+                            Verified on <span th:text="${#temporals.format(company.verificationDate, 'dd MMM yyyy')}">
+                           </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Description -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-info-circle"></i> About Company
+            </h5>
+        </div>
+        <div class="card-body">
+            <p th:text="${company.description}" class="mb-0"></p>
+        </div>
+    </div>
+
+    <!-- Location Information -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-location-dot"></i> Headquarters Location
+            </h5>
+        </div>
+        <div class="card-body">
+            <div th:if="${company.headquarters}">
+                <p class="mb-1">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span th:text="${company.headquarters.address}"></span>
+                </p>
+                <p class="mb-0">
+                    <i class="fas fa-city"></i>
+                    <span th:text="${company.headquarters.city + ', ' + company.headquarters.country}"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Links -->
+    <div class="card mb-4" th:if="${!company.socialLinks.empty}">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-share-nodes"></i> Social Media
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="d-flex gap-3">
+                <a th:if="${company.socialLinks.get('linkedin')}"
+                   th:href="${company.socialLinks.get('linkedin')}"
+                   class="btn btn-outline-primary" target="_blank">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a th:if="${company.socialLinks.get('twitter')}"
+                   th:href="${company.socialLinks.get('twitter')}"
+                   class="btn btn-outline-info" target="_blank">
+                    <i class="fab fa-twitter"></i> Twitter
+                </a>
+                <a th:if="${company.socialLinks.get('facebook')}"
+                   th:href="${company.socialLinks.get('facebook')}"
+                   class="btn btn-outline-primary" target="_blank">
+                    <i class="fab fa-facebook"></i> Facebook
+                </a>
+                <!-- Add more social media buttons as needed -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Creation Info -->
+    <div class="card mb-4">
+        <div class="card-body text-muted">
+            <small>
+                <i class="fas fa-clock"></i> Created:
+                <span th:text="${#temporals.format(company.createdAt, 'dd MMM yyyy HH:mm')}"></span>
+                <span class="mx-2">|</span>
+                <i class="fas fa-pencil"></i> Last updated:
+                <span th:text="${#temporals.format(company.updatedAt, 'dd MMM yyyy HH:mm')}"></span>
+            </small>
+        </div>
+    </div>
+
+    <!-- Active Job Listings -->
+    <div class="card mb-4" th:if="${company.totalJobListings > 0}">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-briefcase"></i> Active Job Listings
+            </h5>
+        </div>
+        <div class="card-body">
+            <!-- Add job listings component here -->
+            <p class="text-center">
+                <a th:href="@{/jobs(companyId=${company.id})}" class="btn btn-outline-primary">
+                    <i class="fas fa-list"></i> View All Job Listings
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
