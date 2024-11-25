@@ -47,4 +47,16 @@ public interface JobListingRepository extends JpaRepository<JobListing, Long>, J
     @Query("SELECT j FROM JobListing j WHERE j.active = true ORDER BY j.createdAt DESC")
         // изменено с isActive на active
     List<JobListing> findLatestActiveJobs(Pageable pageable);
+
+
+
+    long countByCategoryAndActiveTrue(Category category);
+
+    @Query("SELECT MIN(j.salary) FROM JobListing j " +
+            "WHERE j.category = :category AND j.active = true AND j.salary IS NOT NULL")
+    BigDecimal findMinSalaryByCategory(@Param("category") Category category);
+
+    @Query("SELECT MAX(j.salary) FROM JobListing j " +
+            "WHERE j.category = :category AND j.active = true AND j.salary IS NOT NULL")
+    BigDecimal findMaxSalaryByCategory(@Param("category") Category category);
 }

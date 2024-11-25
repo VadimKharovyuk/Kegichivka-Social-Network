@@ -381,89 +381,51 @@
 
 <main>
     <div class="categories-grid">
-        <!-- Вакансии дня -->
-        <div class="category-card">
-            <div class="category-title">wajij85601@cashbn.com - Base</div>
-            <div class="category-salary">sored41905@cashbn.com Admin</div>
-            <div class="category-count">vadimKh17@gmail.com Busynes</div>
-        </div>
+        <div th:each="category : ${categories}" class="category-card">
+            <div class="category-title">
+                <i class="fas fa-folder"></i>
+                <a th:href="@{/jobs(categoryId=${category.id})}" th:text="${category.name}"></a>
+            </div>
 
-        <!-- Компании дня -->
-        <div class="category-card">
-            <div class="category-title">Компании дня</div>
-            <div class="category-count">320 вакансий</div>
-        </div>
+            <!-- Упрощенная версия вывода количества вакансий -->
+            <div class="category-count" th:if="${category.jobCount >= 0}">
+                <i class="fas fa-briefcase"></i>
+                <span th:text="${category.jobCount + ' ' +
+                (category.jobCount == 1 ? 'вакансія' :
+                (category.jobCount >= 2 && category.jobCount <= 4 ? 'вакансії' : 'вакансій'))}">
+            </span>
+            </div>
 
-        <!-- Работа из дома -->
-        <div class="category-card">
-            <div class="category-title">Работа из дома</div>
-            <div class="category-count">706 вакансий</div>
-        </div>
-
-        <!-- Подработка -->
-        <div class="category-card">
-            <div class="category-title">Подработка</div>
-            <div class="category-salary">45 000 – 410 000 ₽</div>
-            <div class="category-count">24 вакансии</div>
-        </div>
-
-        <!-- Курьер -->
-        <div class="category-card">
-            <div class="category-title">Курьер</div>
-            <div class="category-salary">155 000 – 240 000 ₽</div>
-            <div class="category-count">1 вакансия</div>
-        </div>
-
-        <!-- Водитель -->
-        <div class="category-card">
-            <div class="category-title">Водитель</div>
-            <div class="category-salary">120 000 – 280 000 ₽</div>
-            <div class="category-count">7 вакансий</div>
-        </div>
-
-        <!-- Продавец -->
-        <div class="category-card">
-            <div class="category-title">Продавец</div>
-            <div class="category-salary">135 000 – 180 000 ₽</div>
-            <div class="category-count">1 вакансия</div>
-        </div>
-
-        <!-- Администратор -->
-        <div class="category-card">
-            <div class="category-title">Администратор</div>
-            <div class="category-salary">80 000 – 350 000 ₽</div>
-            <div class="category-count">24 вакансии</div>
-        </div>
-
-        <!-- Оператор -->
-        <div class="category-card">
-            <div class="category-title">Оператор</div>
-            <div class="category-count">3 вакансии</div>
-        </div>
-
-        <!-- Программист -->
-        <div class="category-card">
-            <div class="category-title">Программист</div>
-            <div class="category-salary">80 000 – 765 000 ₽</div>
-            <div class="category-count">47 вакансий</div>
-        </div>
-
-        <!-- Менеджер -->
-        <div class="category-card">
-            <div class="category-title">Менеджер</div>
-            <div class="category-salary">до 1 665 000 ₽</div>
-            <div class="category-count">160 вакансий</div>
-        </div>
-
-        <!-- Помощник -->
-        <div class="category-card">
-            <div class="category-title">Помощник</div>
-            <div class="category-salary">40 000 – 340 000 ₽</div>
-            <div class="category-count">21 вакансия</div>
+            <!-- Диапазон зарплат -->
+            <div class="category-salary" th:if="${category.minSalary != null && category.maxSalary != null}">
+                <i class="fas fa-money-bill"></i>
+                <span th:text="${#numbers.formatInteger(category.minSalary,1,'COMMA')} +
+                          ' - ' +
+                          ${#numbers.formatInteger(category.maxSalary,1,'COMMA')} + ' ₴'">
+            </span>
+            </div>
         </div>
     </div>
 
-    <a href="#" class="more-jobs">Ещё 13 профессий</a>
+<!--    &lt;!&ndash; Кнопка "Показати більше" &ndash;&gt;-->
+<!--    <div th:if="${hasMoreCategories}" class="text-center mt-4">-->
+<!--        <a href="#" class="btn btn-outline-primary more-jobs">-->
+<!--            <i class="fas fa-plus-circle"></i>-->
+<!--            Показати ще <span th:text="${remainingCategoriesCount}"></span>-->
+<!--            <span th:text="${remainingCategoriesCount == 1 ? 'категорію' :-->
+<!--                      (remainingCategoriesCount >= 2 && remainingCategoriesCount <= 4 ?-->
+<!--                       'категорії' : 'категорій')}">-->
+<!--        </span>-->
+<!--        </a>-->
+<!--    </div>-->
+
+    <!-- Кнопка "Показати більше" если есть дополнительные категории -->
+    <div th:if="${hasMoreCategories}" class="text-center mt-4">
+        <a href="/categories" class="btn btn-outline-primary more-jobs">
+            <i class="fas fa-plus-circle"></i>
+            Показати ще <span th:text="${remainingCategoriesCount}"></span> категорій
+        </a>
+    </div>
 
 
     <section class="content-section">

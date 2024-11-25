@@ -24,4 +24,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
             "INNER JOIN JobListing j ON j.category = c " +
             "WHERE j.active = true")  // изменено с isActive на active
     List<Category> findCategoriesWithActiveJobs();
+
+
+
 }
