@@ -59,4 +59,7 @@ public interface JobListingRepository extends JpaRepository<JobListing, Long>, J
     @Query("SELECT MAX(j.salary) FROM JobListing j " +
             "WHERE j.category = :category AND j.active = true AND j.salary IS NOT NULL")
     BigDecimal findMaxSalaryByCategory(@Param("category") Category category);
+
+    List<JobListing> findByBusinessUserOrderByCreatedAtDesc(BusinessUser businessUser);
+
 }

@@ -1,15 +1,14 @@
 package com.example.kegichivka.service;
 
+import com.example.kegichivka.config.SecurityUtils;
 import com.example.kegichivka.dto.*;
 import com.example.kegichivka.enums.ApplicationStatus;
 import com.example.kegichivka.enums.ListingStatus;
 import com.example.kegichivka.exception.ResourceNotFoundException;
 import com.example.kegichivka.maper.JobListingMapper;
 import com.example.kegichivka.model.*;
-import com.example.kegichivka.repositoty.CategoryRepository;
-import com.example.kegichivka.repositoty.JobApplicationRepository;
-import com.example.kegichivka.repositoty.JobListingRepository;
-import com.example.kegichivka.repositoty.ViewStatisticsRepository;
+import com.example.kegichivka.repositoty.*;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.Join;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +28,7 @@ import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.criteria.Predicate;
 
@@ -41,6 +41,8 @@ public class JobListingService {
     private final CategoryRepository categoryRepository;
     private final JobApplicationRepository jobApplicationRepository;
     private final ViewStatisticsRepository viewStatisticsRepository;
+    private final SecurityUtils securityUtils;
+    private final BusinessUserRepository businessUserRepository;
 
     public JobListingResponseDto createJob(CreateJobListingDto dto, BusinessUser businessUser) {
         log.info("Starting job creation process");
@@ -205,7 +207,6 @@ public class JobListingService {
     }
 
 
-
     private void validateJobOwnership(JobListing jobListing, BusinessUser businessUser)
             throws AccessDeniedException {
         if (!jobListing.getBusinessUser().getId().equals(businessUser.getId())) {
@@ -249,5 +250,13 @@ public class JobListingService {
         return jobListingMapper.toResponseDto(jobListing);
     }
 
+    public List<JobListingResponseDto> getCurrentUserJobs(String email) {
+        BusinessUser businessUser = businessUserRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("Business user not found with email: " + email));
 
+        return jobListingRepository.findByBusinessUserOrderByCreatedAtDesc(businessUser)
+                .stream()
+                .map(jobListingMapper::toResponseDto)
+                .collect(Collectors.toList());
+    }
 }

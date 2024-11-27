@@ -1,5 +1,6 @@
 package com.example.kegichivka.controller;
 
+import com.example.kegichivka.config.SecurityUtils;
 import com.example.kegichivka.dto.*;
 import com.example.kegichivka.enums.UserRole;
 import com.example.kegichivka.exception.ResourceNotFoundException;
@@ -36,6 +37,7 @@ import java.math.BigDecimal;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+
 @Slf4j
 @Controller
 @RequestMapping("/jobs")
@@ -45,6 +47,7 @@ public class JobListingWebController {
     private final CategoryRepository categoryRepository;
     private final BusinessUserService businessUserService;
     private final UserService userService;
+    private final SecurityUtils securityUtils;
 
     @GetMapping
     public String listJobs(
@@ -104,8 +107,8 @@ public class JobListingWebController {
     @GetMapping("/create")
     @PreAuthorize("hasRole('BUSINESS_USER')")
     public String showCreateForm(Model model) {
-       model.containsAttribute("jobDto") ;
-            model.addAttribute("jobDto", new CreateJobListingDto());
+        model.containsAttribute("jobDto");
+        model.addAttribute("jobDto", new CreateJobListingDto());
         List<Category> categories = categoryRepository.findAll();
         model.addAttribute("categories", categories);
         return "jobs/create";
@@ -245,12 +248,6 @@ public class JobListingWebController {
         return "redirect:/jobs";
     }
 
-    // Обработка ошибок
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public String handleNotFound(ResourceNotFoundException e, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        return "redirect:/jobs";
-    }
 
     @ExceptionHandler(AccessDeniedException.class)
     public String handleAccessDenied(AccessDeniedException e, RedirectAttributes redirectAttributes) {
@@ -258,7 +255,7 @@ public class JobListingWebController {
         return "redirect:/jobs";
     }
 
-//    @PostMapping("/{id}/apply")
+    //    @PostMapping("/{id}/apply")
 //    @PreAuthorize("hasRole('REGULAR_USER')")
 //    public String applyForJob(@PathVariable Long id,
 //                              @AuthenticationPrincipal UserPrincipal currentUser,
@@ -284,5 +281,26 @@ public class JobListingWebController {
 //            return "redirect:/jobs/" + id;
 //        }
 //    }
+    @GetMapping("/my-jobs")
+    public String getMyJobs(Model model) throws AccessDeniedException {
+        String email = securityUtils.getCurrentUserEmail();
+        List<JobListingResponseDto> jobs = jobListingService.getCurrentUserJobs(email);
+        model.addAttribute("jobs", jobs);
+        return "jobs/my-jobs";
+    }
+
+    @GetMapping("/my-jobs/{id}")
+    public String getJob(@PathVariable Long id, Model model) {
+        JobListingResponseDto job = jobListingService.getJobById(id);
+        model.addAttribute("job", job);
+        return "jobs/job-details";
+    }
+
+    // Обработка ошибок
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public String handleNotFound(ResourceNotFoundException e, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        return "redirect:/jobs";
+    }
 
 }
